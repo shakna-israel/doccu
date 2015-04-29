@@ -1,3 +1,5 @@
 gevent
 bottle
 cherrypy
+unittest
+nose
