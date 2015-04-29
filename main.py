@@ -8,6 +8,6 @@ from gevent import monkey
 # Using gevent, we monkeypatch Python's routing system, so that we end up using greenlets without having to mess with our routes.
 monkey.patch_all()
 
-from bottle import CherryPyServer
+from bottle import run, CherryPyServer
 
 run(server=CherryPyServer)
