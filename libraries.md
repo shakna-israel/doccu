@@ -9,7 +9,4 @@
 * [Gevent](http://gevent.org/) | Greenlets for better concurrency on the server.
 * [CherryPy](http://cherrypy.org/) | WSGI backend, load manager.
 * [PyCrypto](https://github.com/dlitz/pycrypto) | Encryption library to generate authorisations.
-
-Still needed:
-
-* PDF Signing and Certification
+* [LazyJSON](https://github.com/fenhl/lazyjson) | Attributes for users and documents.
