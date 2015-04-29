@@ -9,6 +9,6 @@ python:
  - "pypy"
  - "pypy3"
  - "nightly" # Cython
-install: "pip install -r requirements.txt"
+install: "sh .travis-install.sh"
 script: "nosetests"
 sudo: required
