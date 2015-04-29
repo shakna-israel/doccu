@@ -1,6 +1,14 @@
 # doccu
 Documentation Engine
 
+# In Development
+
+Doccu is still being defined, let alone built.
+
+If you happen to find some Python files here, I would strongly reccomend you do not use them.
+
+This is a commercially commissioned project, in the earliest days of development.
+
 ## Provisioning
 
 Doccu uses *Vagrant*, so launching is as simple as:
