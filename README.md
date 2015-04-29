@@ -1,7 +1,7 @@
 # doccu
 Documentation Engine
 
-# In Development
+# In Development [![Build Status](https://travis-ci.org/shakna-israel/doccu.svg)](https://travis-ci.org/shakna-israel/doccu)
 
 Doccu is still being defined, let alone built.
 
