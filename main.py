@@ -35,10 +35,17 @@ def api_name():
     name = doccu_vars()[1]
     return { 'Build Name': name }
     
-@route("/api/document/<name>")
-@route("/api/document/<name>/")
+@route("/api/document/<name>", method="GET")
+@route("/api/document/<name>/", method="GET")
 def document_fetch(name):
     # Fetch from SQLite
     return False
+
+@route("/api/document/<name>", method="PUT")
+@route("/api/document/<name>/", method="PUT")
+def document_fetch(name):
+    # Insert into SQLite
+    return False
+
 
 run(host='0.0.0.0', server=CherryPyServer)
