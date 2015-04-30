@@ -9,5 +9,12 @@ from gevent import monkey
 monkey.patch_all()
 
 from bottle import run, CherryPyServer
+import lazyjson
+
+@route("/api/")
+@route("/api/version")
+def api_version():
+  version_file = lazyjson.File('json/version.json')
+  return version_file
 
 run(server=CherryPyServer)
