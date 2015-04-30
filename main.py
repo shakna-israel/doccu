@@ -31,7 +31,14 @@ def api_version():
 
 @route("/api/name")
 @route("/api/name/")
+def api_name():
     name = doccu_vars()[1]
     return { 'Build Name': name }
+    
+@route("/api/document/<name>")
+@route("/api/document/<name>/")
+def document_fetch(name):
+    # Fetch from SQLite
+    return False
 
 run(host='0.0.0.0', server=CherryPyServer)
