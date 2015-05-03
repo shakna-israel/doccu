@@ -10,18 +10,16 @@ monkey.patch_all()
 
 from bottle import run, CherryPyServer, route
 import json
-
-def doccu_vars():
-    version = "0.0.1"
-    name = "Semantic Arguments"
-    return ( version, name )
+import uuid
+import base64
 
 @route("/api")
 @route("/api/")
 def api_information():
-    version = doccu_vars()[0]
-    name = doccu_vars()[1]
-    return { 'Version': version, 'Build Name': name }
+    with open('json/version.json') as data_file:
+        data = json.load(data_file)
+    versions = data["versions"]int(["version"])
+    print max(versions)
 
 @route("/api/version")
 @route("/api/version/")
@@ -38,14 +36,22 @@ def api_name():
 @route("/api/document/<name>", method="GET")
 @route("/api/document/<name>/", method="GET")
 def document_fetch(name):
-    # Fetch from SQLite
-    return False
+    # Fetch from JSON file.
+    return { 'Implemented': False }
 
 @route("/api/document/<name>", method="PUT")
 @route("/api/document/<name>/", method="PUT")
 def document_fetch(name):
-    # Insert into SQLite
-    return False
+    # If not locked, lock.
+        # Store JSON into Python object.
+        # Make modifications.
+        # Return Python object to JSOn file.
+        # Unlock.
+    # Else if locked, fail.
+    return { 'Implemented': False }
 
+def get_uuid():
+    r_uuid = base64.urlsafe_b64encode(uuid.uuid4().bytes)
+    return r_uuid.replace('=', '_')
 
 run(host='0.0.0.0', server=CherryPyServer)

@@ -1,1 +1,10 @@
-{ "version":"0.0.1" }
+{
+    "versions": [
+        { "name": "Semantic Versioning",
+          "version": "0.0.1"
+        },
+        { "name": "Objectional Notation",
+          "version": "0.0.2"
+        }
+    ]
+}
