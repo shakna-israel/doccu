@@ -135,20 +135,61 @@ def get_document_version(name, ver):
 @route("/api/document/<name>/<auth>/<content>", method="GET")
 def document_fetch(name, auth):
     if get_auth(auth):
+        # TODO: Lock file for editing.
         # TODO: Increment file version
         # TODO: Update file with content.
         print content
         # TODO: Remove sign for latest version.
+        # TODO: Unlock file.
     return ( False )
 
+# This URL allows you to sign off on a document, if you have appropriate permissions.
 @route("/api/document/<name>/<auth>/sign", method="GET")
 @route("/api/document/<name>/<auth>/sign/", method="GET")
 def document_sign(name, auth):
     if sign_doc(auth, group_required, doc):
+        # TODO: Lock file for editing.
         # TODO: Sign the specific version of the document.
+        # TODO: Unlock file.
         print("Some sort of sign off here.")
     else:
         return ( False )
+
+# This is a URL that allows you to download a file as a particular format.
+@route("/api/document/<name>/download/<format>")
+@route("/api/document/<name>/download/<format>/")
+def download_doc(name, format):
+    # TODO: Send the filename and preferred format to a pandoc wrapper.
+    # TODO: Return the file to be downloaded.
+    return ( False )
+
+# This URL allows a user to fetch a reset-password command.
+@route("/api/user/forgot/<user>">
+@route("/api/user/forgot/<user>">
+def forgotten_password:
+    # TODO: Set user password to a random string.
+    # TODO: Require user to change password on next login.
+    # TODO: Email random string to user linked email address.
+    return ( False )
+
+# This URL allows an authorised user to create a new user.
+@route("/api/user/create/<auth>/<username>/<name>/<email>")
+@route("/api/user/create/<auth>/<username>/<name>/<email>/")
+def generate_user(auth, username, name, email):
+    # TODO: Check authorisation.
+    # TODO: Check if user already exists.
+    # TODO: Create new user with random string.
+    # TODO: Require user to change password on next login.
+    # TODO: Email random string to user linked email address.
+    return ( False )
+
+@route("/api/user/<auth>/<username>/<group>")
+@route("/api/user/<auth>/<username>/<group>/")
+def group_user(auth, group, user):
+    # TODO: Check authorisation.
+    # Check if user exists.
+    # If user exists, assign relevant group.
+    return ( False )
 
 # This is the main function that runs the REST Server for us.
 def main():
