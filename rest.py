@@ -45,6 +45,21 @@ def get_document_features(file):
     except IOError:
         return ( False )
 
+# This is a little function to grab all the features of a user stored in our data.
+def get_user_attributes(user):
+    try:
+        file = open("yaml/users.yaml")
+        yaml_data = yaml.load(file)
+        file.close()
+        for key in yaml_data:
+            if key["user"] == user:
+                username = key["username"]
+                hash = key["hash"]
+                name = key["name"]
+                email = key["email"]
+                group = key["group"]
+        return ( username, group, hash, name, email )
+
 # This is a simple function to check that your password hash is in the database, otherwise you won't be allowed to do anything.
 def get_auth(auth):
     authorised = False
@@ -183,12 +198,27 @@ def generate_user(auth, username, name, email):
     # TODO: Email random string to user linked email address.
     return ( False )
 
+# This URL allows an authorised user to assign another user to a group.
 @route("/api/user/<auth>/<username>/<group>")
 @route("/api/user/<auth>/<username>/<group>/")
 def group_user(auth, group, user):
     # TODO: Check authorisation.
     # Check if user exists.
     # If user exists, assign relevant group.
+    return ( False )
+
+# This URL allows a bug report to be submitted.
+@route("/api/report/<bug>")
+@route("/api/report/<bug>/")
+def bug_report(bug):
+    # TODO: Email a bug report to the developer.
+    return ( False )
+
+# This URL allows the developer to feel happier.
+@route("/api/report/l/<love>")
+@route("/api/report/l/<love>/")
+def love_report(love):
+    # TODO: Email the developer a random happy face, and the user comment.
     return ( False )
 
 # This is the main function that runs the REST Server for us.
