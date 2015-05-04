@@ -7,20 +7,24 @@
 * Working document updating
 * Working user authorisation
 * Working document downloading (Markdown only)
-* Correct file locking.
+* Correct file locking
+* Only fetch latest *signed* version
+* Allow fetching of particular versions
+* Fetch number of versions, and numbers.
 
 ## 0.0.4 - Summer Migrations
 
 * Working user creation
+* Working user deletion (automatically unsigns all documents signed by user)
 * Working group migration
-* Working lost password system (includes need for re-signing)
+* Working lost password system (automatically unsigns all documents signed by user)
+* Working email backend
 
 ## 0.0.5 - Pandocify Interactions
 
 * Working document signing
 * Working document generation (PDF, HTML, DOCX, EPUB)
 * Working document downloading (Markdown, PDF, HTML, DOCX, EPUB)
-* All other REST-related TODOs.
 
 ## 0.0.6 - Frontal Mediocraties
 
