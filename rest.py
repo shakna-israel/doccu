@@ -58,6 +58,25 @@ def get_auth(auth):
             authorised_group = key["group"]
     return ( authorised, authorised_group )
 
+# A little bit of a complicated function to sign off on documents.
+def sign_doc(auth, group_required, doc):
+    authorised = False
+    authorised_group = False
+    file = open("yaml/users.yaml",'r')
+    yaml_data = yaml.load(file)
+    file.close()
+    for key in yaml_data:
+        if key["hash"] == auth:
+           authorised = True
+           authorised_group = key["group"]
+           sign_user = key["username"]
+           sign_name = key["name"]
+    if authorised:
+        if authorised_group = group_required:
+            return ( True, sign_user, sign_name  )
+    else:
+        return ( False )
+
 # This is a URL where you can find all the current information about the API.
 @route("/api")
 @route("/api/")
@@ -90,11 +109,11 @@ def api_name():
 def document_fetch(name):
     openfile = "yaml/" + str(name) + ".yaml"
     grab_latest = get_document_features(openfile)
+    # TODO: Some sort of ifloop to ensure latest is signed.
     if grab_latest:
         version = grab_latest[0]
         title = grab_latest[1]
         author = grab_latest[2]
-        signer = grab_latest[3]
         group = grab_latest[4]
         category = grab_latest[5]
         timestamp = grab_latest[6]
@@ -102,13 +121,34 @@ def document_fetch(name):
         return { "Version": version, "Title": title, "Author": author, "Signer": signer, "Group": group, "Category": category, "Timestamp": timestamp, "Body": body }
     else:
         return ( False )
+
+# This URL will give you a specific version of a document.
+# You cannot edit a spcefic version of a document.
+@route("/api/document/<name>/<ver>", method="GET")
+@route("/api/document/<name>/<ver>/", method="GET")
+def get_document_version(name, ver):
+    # TODO: Some sort of loop to fetch the specific version of the document.
+    return ( False )
+
 # This is a PUT method to modify documents stored in our data. It takes two arguments: The document, and your authorisation.
-@route("/api/document/<name>/<auth>", method="PUT")
-@route("/api/document/<name>/<auth>/", method="PUT")
+@route("/api/document/<name>/<auth>/<content>", method="POST")
+@route("/api/document/<name>/<auth>/<content>", method="POST")
 def document_fetch(name, auth):
     if get_auth(auth):
-        print get_auth(auth)
-    return { 'Implemented': False }
+        # TODO: Increment file version
+        # TODO: Update file with content.
+        print content
+        # TODO: Remove sign for latest version.
+    return ( False )
+
+@route("/api/document/<name>/<auth>/sign", method="POST")
+@route("/api/document/<name>/<auth>/sign/", method="POST")
+def document_sign(name, auth):
+    if sign_doc(auth, group_required, doc):
+        # TODO: Sign the specific version of the document.
+        print("Some sort of sign off here.")
+    else:
+        return ( False )
 
 # This is the main function that runs the REST Server for us.
 def main():
