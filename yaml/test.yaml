@@ -1,0 +1,16 @@
+---
+- version: 0.0.1
+  name: Test Document 0
+  author: James Milne
+  signer: James Milne
+  group: Super Administrators
+  category: doccu
+  timestamp: 01/01/2015 00:00:00
+  body: |
+    # First Subtitle
+    
+    This is just a little bit of a paragraph.
+
+    I'm not sure if we'll store in Markdown or in HTML.
+
+    Markdown is much easier to read, but HTML will store much better. No problems with broken lines.
