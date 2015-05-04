@@ -16,12 +16,12 @@ import yaml
 def get_latest_version(file):
     openfile = open(file,'r')
     versions = yaml.load(openfile)
+    openfile.close()
     previous = '0.0.0'
     for key in versions:
         if key["version"] > previous:
             previous = key["version"]
             previous_name = key["name"]
-    openfile.close()
     return ( previous, previous_name )
 
 # This is a little function to grab all the features of a document stored in our data.
@@ -29,6 +29,7 @@ def get_document_features(file):
     try:
         openfile = open(file,'r')
         yaml_data = yaml.load(openfile)
+        openfile.close()
         version = '0.0.0'
         for key in yaml_data:
             if key["version"] > version:
@@ -40,10 +41,23 @@ def get_document_features(file):
                 category = key["category"]
                 timestamp = key["timestamp"]
                 body = key["body"]
-        openfile.close()
         return ( version, title, author, signer, group, category, timestamp, body )            
     except IOError:
         return ( False )
+
+# This is a simple function to check that your password hash is in the database, otherwise you won't be allowed to do anything.
+def get_auth(auth):
+    authorised = False
+    authorised_group = False
+    file = open("yaml/users.yaml",'r')
+    yaml_data = yaml.load(file)
+    file.close()
+    for key in yaml_data:
+        if key["hash"] == auth:
+            authorised = True
+            authorised_group = key["group"]
+    return ( authorised, authorised_group )
+
 # This is a URL where you can find all the current information about the API.
 @route("/api")
 @route("/api/")
@@ -92,12 +106,8 @@ def document_fetch(name):
 @route("/api/document/<name>/<auth>", method="PUT")
 @route("/api/document/<name>/<auth>/", method="PUT")
 def document_fetch(name, auth):
-    # If not locked, lock.
-        # Store JSON into Python object.
-        # Make modifications.
-        # Return Python object to JSOn file.
-        # Unlock.
-    # Else if locked, fail.
+    if get_auth(auth):
+        print get_auth(auth)
     return { 'Implemented': False }
 
 # This is the main function that runs the REST Server for us.
