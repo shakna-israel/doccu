@@ -131,8 +131,8 @@ def get_document_version(name, ver):
     return ( False )
 
 # This is a PUT method to modify documents stored in our data. It takes two arguments: The document, and your authorisation.
-@route("/api/document/<name>/<auth>/<content>", method="POST")
-@route("/api/document/<name>/<auth>/<content>", method="POST")
+@route("/api/document/<name>/<auth>/<content>", method="GET")
+@route("/api/document/<name>/<auth>/<content>", method="GET")
 def document_fetch(name, auth):
     if get_auth(auth):
         # TODO: Increment file version
@@ -141,8 +141,8 @@ def document_fetch(name, auth):
         # TODO: Remove sign for latest version.
     return ( False )
 
-@route("/api/document/<name>/<auth>/sign", method="POST")
-@route("/api/document/<name>/<auth>/sign/", method="POST")
+@route("/api/document/<name>/<auth>/sign", method="GET")
+@route("/api/document/<name>/<auth>/sign/", method="GET")
 def document_sign(name, auth):
     if sign_doc(auth, group_required, doc):
         # TODO: Sign the specific version of the document.
