@@ -9,17 +9,28 @@ from gevent import monkey
 monkey.patch_all()
 
 from bottle import run, CherryPyServer, route
-import json
+import yaml
 import uuid
 import base64
+
+def get_latest_version(file):
+    versions = yaml.load(file)
+    previous = '0.0.0'
+    for key in versions:
+        if key["version"] > previous:
+            previous = key["version"]
+            previous_name = key["name"]
+    file.close()
+    return ( previous, previous_name )
 
 @route("/api")
 @route("/api/")
 def api_information():
-    with open('json/version.json') as data_file:
-        data = json.load(data_file)
-    versions = data["versions"]int(["version"])
-    print max(versions)
+    file = open("yaml/versions.yaml",'r')
+    grab = get_latest_version(file)
+    version = grab[0]
+    name = grab[1]
+    return { "Version": version, "Name": name }
 
 @route("/api/version")
 @route("/api/version/")
@@ -54,4 +65,10 @@ def get_uuid():
     r_uuid = base64.urlsafe_b64encode(uuid.uuid4().bytes)
     return r_uuid.replace('=', '_')
 
-run(host='0.0.0.0', server=CherryPyServer)
+def main():
+    version = get_latest_version(open("yaml/versions.yaml",'r'))
+    print "Running v" + version[0] + ", " + version[1]
+    run(host='0.0.0.0', server=CherryPyServer)
+
+if __name__ == "__main__":
+    main()
