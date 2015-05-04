@@ -26,22 +26,24 @@ def get_latest_version(file):
 
 # This is a little function to grab all the features of a document stored in our data.
 def get_document_features(file):
-    openfile = open(file,'r')
-    yaml_data = yaml.load(openfile)
-    version = '0.0.0'
-    for key in yaml_data:
-        if key["version"] > version:
-            version = key["version"]
-            title = key["name"]
-            author = key["author"]
-            signer = key["signer"]
-            group = key["group"]
-            category = key["category"]
-            timestamp = key["timestamp"]
-            body = key["body"]
-    openfile.close()
-    return ( version, title, author, signer, group, category, timestamp, body )            
-
+    try:
+        openfile = open(file,'r')
+        yaml_data = yaml.load(openfile)
+        version = '0.0.0'
+        for key in yaml_data:
+            if key["version"] > version:
+                version = key["version"]
+                title = key["name"]
+                author = key["author"]
+                signer = key["signer"]
+                group = key["group"]
+                category = key["category"]
+                timestamp = key["timestamp"]
+                body = key["body"]
+        openfile.close()
+        return ( version, title, author, signer, group, category, timestamp, body )            
+    except IOError:
+        return ( False )
 # This is a URL where you can find all the current information about the API.
 @route("/api")
 @route("/api/")
@@ -74,16 +76,18 @@ def api_name():
 def document_fetch(name):
     openfile = "yaml/" + str(name) + ".yaml"
     grab_latest = get_document_features(openfile)
-    version = grab_latest[0]
-    title = grab_latest[1]
-    author = grab_latest[2]
-    signer = grab_latest[3]
-    group = grab_latest[4]
-    category = grab_latest[5]
-    timestamp = grab_latest[6]
-    body = grab_latest[7]
-    return { "Version": version, "Title": title, "Author": author, "Signer": signer, "Group": group, "Category": category, "Timestamp": timestamp, "Body": body }
-
+    if grab_latest:
+        version = grab_latest[0]
+        title = grab_latest[1]
+        author = grab_latest[2]
+        signer = grab_latest[3]
+        group = grab_latest[4]
+        category = grab_latest[5]
+        timestamp = grab_latest[6]
+        body = grab_latest[7]
+        return { "Version": version, "Title": title, "Author": author, "Signer": signer, "Group": group, "Category": category, "Timestamp": timestamp, "Body": body }
+    else:
+        return ( False )
 # This is a PUT method to modify documents stored in our data. It takes two arguments: The document, and your authorisation.
 @route("/api/document/<name>/<auth>", method="PUT")
 @route("/api/document/<name>/<auth>/", method="PUT")
