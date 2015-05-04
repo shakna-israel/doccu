@@ -8,11 +8,11 @@ from gevent import monkey
 # Using gevent, we monkeypatch Python's routing system, so that we end up using greenlets without having to mess with our routes.
 monkey.patch_all()
 
+# Here we import the tools from bottle we'll use to run the REST server.
 from bottle import run, CherryPyServer, route
 import yaml
-import uuid
-import base64
 
+# This is a little function to find out what version of the REST Server we are running.
 def get_latest_version(file):
     openfile = open(file,'r')
     versions = yaml.load(openfile)
@@ -24,6 +24,7 @@ def get_latest_version(file):
     openfile.close()
     return ( previous, previous_name )
 
+# This is a little function to grab all the features of a document stored in our data.
 def get_document_features(file):
     openfile = open(file,'r')
     yaml_data = yaml.load(openfile)
@@ -41,6 +42,7 @@ def get_document_features(file):
     openfile.close()
     return ( version, title, author, signer, group, category, timestamp, body )            
 
+# This is a URL where you can find all the current information about the API.
 @route("/api")
 @route("/api/")
 def api_information():
@@ -50,6 +52,7 @@ def api_information():
     name = grab[1]
     return { "Version": version, "Name": name }
 
+# This URL will give you the current version number of the REST Server.
 @route("/api/version")
 @route("/api/version/")
 def api_version():
@@ -57,6 +60,7 @@ def api_version():
     version = get_latest_version(file)[0]
     return { 'Version': version }
 
+# This URL will give you the current version name of the REST Server.
 @route("/api/name")
 @route("/api/name/")
 def api_name():
@@ -64,6 +68,7 @@ def api_name():
     name = get_latest_version(file)[1]
     return { 'Build Name': name }
     
+# This URL will allow you to fetch all the information about a particular document stored in our data.
 @route("/api/document/<name>", method="GET")
 @route("/api/document/<name>/", method="GET")
 def document_fetch(name):
@@ -78,10 +83,11 @@ def document_fetch(name):
     timestamp = grab_latest[6]
     body = grab_latest[7]
     return { "Version": version, "Title": title, "Author": author, "Signer": signer, "Group": group, "Category": category, "Timestamp": timestamp, "Body": body }
-    
-@route("/api/document/<name>", method="PUT")
-@route("/api/document/<name>/", method="PUT")
-def document_fetch(name):
+
+# This is a PUT method to modify documents stored in our data. It takes two arguments: The document, and your authorisation.
+@route("/api/document/<name>/<auth>", method="PUT")
+@route("/api/document/<name>/<auth>/", method="PUT")
+def document_fetch(name, auth):
     # If not locked, lock.
         # Store JSON into Python object.
         # Make modifications.
@@ -90,10 +96,7 @@ def document_fetch(name):
     # Else if locked, fail.
     return { 'Implemented': False }
 
-def get_uuid():
-    r_uuid = base64.urlsafe_b64encode(uuid.uuid4().bytes)
-    return r_uuid.replace('=', '_')
-
+# This is the main function that runs the REST Server for us.
 def main():
     version = get_latest_version("yaml/versions.yaml")
     print "Running v" + version[0] + ", " + version[1]
