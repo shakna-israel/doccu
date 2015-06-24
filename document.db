@@ -1,1 +1,27 @@
-{"title":"PolicyA1000","date":"2015-06-24","date-renew":"2016-06-24","category":"test-docs","content":"This is a lot of content<br>that will hopefully be read<br>correctly"}
+(dp0
+S'date'
+p1
+S'2015-06-24'
+p2
+sS'category'
+p3
+S'test-docs'
+p4
+sS'content'
+p5
+(lp6
+S'This is a lot of content'
+p7
+aS'that will hopefully be read'
+p8
+aS'correctly'
+p9
+asS'date-renew'
+p10
+S'2016-06-24'
+p11
+sS'title'
+p12
+S'PolicyA1000'
+p13
+s.

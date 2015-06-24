@@ -4,4 +4,8 @@
 <h3>Active: {{date}}</h3>
 <h3>Review: {{renew_date}}</h3>
 <h3>Category: {{category}}</h3>
-<p>{{content}}</p>
+{% for line in content %}
+    <p>{{line}}</p>
+{% endfor %}
+
+<script src="{{ url_for('js', filename='js/pdfmake.min.js') }}"></script>
