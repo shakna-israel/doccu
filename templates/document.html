@@ -13,13 +13,28 @@
 </style>
 <h2>Document: {{title}}</h2>
 <h3>Active: {{date}}</h3>
+<h3>Version: {{version}}</h3>
 <h3>Review: {{renew_date}}</h3>
-<h3>Category: {{category}}</h3>
+<h3>Category: </h3>
+<ul>
+{% for item in category %}
+    <li>{{item}}</li>
+{% endfor %}
+</ul>
+<hr/>
+<h3>Descriptor:</h3>
+{{descriptor}}
+<hr/>
+<h3>Preamble:</h3>
+{{preamble}}
+<hr/>
+<h3>Document Proper:</h3>
 {% for line in content %}
     <p>{{line}}</p>
 {% endfor %}
+
 <div class="data-collect">
-  <input id="clickMe" type="button" value="Download PDF" onclick="pdfMake.createPdf(docDefinition).download('{{date}}{{title}}');" />
+  <input id="clickMe" type="button" value="Download PDF" onclick="pdfMake.createPdf(docDefinition).download('{{version}}_{{title}}_{{date}}');" />
   <p><a href="/document/{{file}}/json" target="_blank">JSON Data</a></p>
 </div>
 
@@ -28,14 +43,58 @@
 <script src="/static/js/vfs_fonts.js"></script>
 <script>
 var docDefinition = {
+  pageSize: 'A4',
+  pageMargins: [40, 60, 40, 60],
+  header: {
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
+    columns: [
+      { text: 'Version: {{version}}'},
+      { text: '{{title}}', alignment: 'right' }
+    ]
+  },
+  footer: function(pagenumber, pagecount) {
+    return {
+        marginLeft: 20,
+        marginRight: 20,
+        columns: [
+           { text: 'Ballarat Christian College'},
+           { text: pagenumber.toString() + ' of ' + pagecount, alignment: 'right' },
+        ],
+  }},
   content: [
-    'Document: {{title}}',
+    { text: 'Document:', fontSize: 15 },
+    '{{title}}',
     '\n',
-    'Active: {{date}}',
+    { text: 'Version:', fontSize: 15 },
+    '{{version}}',
     '\n',
-    'Review: {{renew_date}}',
+    { text: 'Active:', fontSize: 15 },
+    '{{date}}',
     '\n',
-    'Category: {{category}}',
+    { text: 'Review:', fontSize: 15 },
+    '{{renew_date}}',
+    '\n',
+    { text: 'Category:', fontSize: 15 },
+    '\n',
+    {
+      ul: [
+        {% for item in category %}
+            '{{item}}',
+        {% endfor %}
+      ],
+      pageBreak: 'after'
+    },
+    '\n',
+    { text: 'Descriptor:', fontSize: 15 },
+    '\n',
+    '{{descriptor}}',
+    { text: 'Preamble', fontSize: 15, pageBreak: 'before' },
+    '\n',
+    '{{preamble}}',
+    '\n',
+    { text: 'Document Proper:', fontSize: 15, pageBreak: 'before' },
     '\n',
     {% for line in content %}
         {% if line == content[-1] %}

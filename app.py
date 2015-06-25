@@ -1,5 +1,8 @@
 from flask import Flask, render_template, jsonify
-import pickle
+try:
+    import cpickle
+except ImportError:
+    import pickle
 
 app = Flask(__name__,static_folder='static')
 
@@ -15,9 +18,12 @@ def document_fetch(name):
     title = document['title']
     date = document['date']
     renew_date = document['date-renew']
+    version = document['version']
     category = document['category']
+    descriptor = document['descriptor']
+    preamble = document['preamble']
     content = document['content']
-    return render_template('document.html',title=title,date=date,renew_date=renew_date,category=category,content=content,file=name)
+    return render_template('document.html',title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,file=name)
 
 @app.route("/document/<name>/json/")
 def json_fetch(name=None):
@@ -26,9 +32,12 @@ def json_fetch(name=None):
     title = document['title']
     date = document['date']
     renew_date = document['date-renew']
+    version = document['version']
     category = document['category']
+    descriptor = document['descriptor']
+    preamble = document['preamble']
     content = document['content']
-    return jsonify(title=title,date=date,renew_date=renew_date,category=category,content=content,file=name)
+    return jsonify(title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,file=name)
 
 @app.route("/document/new/<name>/")
 def document_new(name):

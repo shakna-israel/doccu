@@ -1,27 +1,42 @@
 (dp0
-S'date'
+S'category'
 p1
-S'2015-06-24'
-p2
-sS'category'
-p3
+(lp2
 S'testdocs'
+p3
+aS'testing'
 p4
-sS'content'
+asS'descriptor'
 p5
-(lp6
-S'Some content'
+S'This is a policy descriptor. Short and sweet.'
+p6
+sS'version'
 p7
-aS'is better than'
+S'24'
 p8
-aS'no content.'
+sS'date-renew'
 p9
-asS'date-renew'
-p10
 S'2016-06-24'
-p11
+p10
 sS'title'
+p11
+S'Important Documentation'
 p12
-S'Documentation for Something Important'
+sS'date'
 p13
+S'2015-06-24'
+p14
+sS'content'
+p15
+(lp16
+S'Some content'
+p17
+aS'is better'
+p18
+aS'than none.'
+p19
+asS'preamble'
+p20
+S'This is a preamble paragraph.'
+p21
 s.
