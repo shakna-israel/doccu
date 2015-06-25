@@ -30,9 +30,5 @@ def json_test(name=None):
     content = document['content']
     return jsonify(title=title,date=date,renew_date=renew_date,category=category,content=content)
 
-app.route('/js/<path:path>')
-def send_js(path):
-    return send_from_directory('js', path)
-
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)
