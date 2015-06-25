@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import glob
 try:
     import cpickle
@@ -52,9 +52,19 @@ def json_fetch(name=None):
     content = document['content']
     return jsonify(title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,file=name)
 
-@app.route("/document/new/<name>/")
+@app.route("/document/new/<name>/", methods=['GET','POST'])
 def document_new(name):
-    return "Not Yet Implemented"
+    if request.method == 'GET':
+        return render_template('new_document.html',title=name)
+    if request.method == 'POST':
+        title = request.form['title']
+        date = request.form['date']
+        renew_date = request.form['date-renew']
+        category = request.form['category']
+        descriptor = request.form['descriptor']
+        preamble = request.form['preamble']
+        content = request.form['document-proper']
+        return render_template('new_document_submitted.html',title=title)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)
