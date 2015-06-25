@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify
+import glob
 try:
     import cpickle
 except ImportError:
@@ -10,6 +11,18 @@ app = Flask(__name__,static_folder='static')
 @app.route("/<name>/")
 def hello(name=None):
     return render_template('index.html',dicto={'some':'dict','other':'dict'})
+
+@app.route("/category/<name>/")
+def show_category(name):
+    databases = glob.glob('*.db')
+    in_category = []
+    in_category_url = []
+    for database in databases:
+        document = pickle.load(open(database, "rb"))
+        if name in document['category']:
+            in_category.append(document['title'])
+            in_category_url.append(database.replace(".db",''))
+    return render_template('category.html',name=name, in_category=in_category,url=in_category_url)
 
 @app.route("/document/<name>/")
 def document_fetch(name):

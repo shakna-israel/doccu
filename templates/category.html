@@ -1,0 +1,8 @@
+<!doctype html>
+<title>Category: {{name}}</title>
+<h2>Category: {{name}}</h2>
+<ul>
+{% for item in in_category %}
+    <li><a href="/document/{{url[in_category.index(item)]}}">{{item}}</a></li>
+{% endfor %}
+</ul>
