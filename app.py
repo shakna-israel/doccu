@@ -42,9 +42,14 @@ def document_fetch(name):
     version = document['version']
     category = document['category']
     descriptor = document['descriptor'].replace('\r\n',' ')
+    descriptor_json = document['descriptor'].replace('\r\n',' ').replace("'","\\'")
     preamble = document['preamble'].replace('\r\n',' ')
+    preamble_json = document['preamble'].replace('\r\n',' ').replace("'","\\'")
     content = document['content']
-    return render_template('document.html',title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,file=name)
+    content_json = document['content']
+    for item in content_json:
+        item = item.replace("'","\\'")
+    return render_template('document.html',title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,descriptor_json=descriptor_json,preamble_json=preamble_json,content_json=content_json,file=name)
 
 @app.route("/document/<name>/json/")
 def json_fetch(name=None):
@@ -55,9 +60,11 @@ def json_fetch(name=None):
     renew_date = document['date-renew']
     version = document['version']
     category = document['category']
-    descriptor = document['descriptor'].replace('\r\n',' ')
-    preamble = document['preamble'].replace('\r\n',' ')
+    descriptor = document['descriptor'].replace('\r\n',' ').replace("'","\\'")
+    preamble = document['preamble'].replace('\r\n',' ').replace("'","\\'")
     content = document['content']
+    for item in content:
+        item = item.replace("'","\\'")
     return jsonify(title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,file=name)
 
 @app.route("/document/new/<name>/", methods=['GET','POST'])

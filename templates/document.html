@@ -65,7 +65,7 @@ var docDefinition = {
   }},
   content: [
     { text: 'Document:', fontSize: 15 },
-    '{{title}}',
+    '{{title|safe}}',
     '\n',
     { text: 'Version:', fontSize: 15 },
     '{{version}}',
@@ -81,7 +81,7 @@ var docDefinition = {
     {
       ul: [
         {% for item in category %}
-            '{{item}}',
+            '{{item|safe}}',
         {% endfor %}
       ],
       pageBreak: 'after'
@@ -89,18 +89,18 @@ var docDefinition = {
     '\n',
     { text: 'Descriptor:', fontSize: 15 },
     '\n',
-    '{{descriptor}}',
+    '{{descriptor_json|safe}}',
     { text: 'Preamble', fontSize: 15, pageBreak: 'before' },
     '\n',
-    '{{preamble|e}}',
+    '{{preamble_json|safe}}',
     '\n',
     { text: 'Document Proper:', fontSize: 15, pageBreak: 'before' },
     '\n',
-    {% for line in content %}
-        {% if line == content[-1] %}
-            '{{line}}'
+    {% for line in content_json %}
+        {% if line == content_json[-1] %}
+            '{{line|safe}}'
         {% else %}
-            '{{line}}',
+            '{{line|safe}}',
         {% endif %}
     {% endfor %}
   ]
