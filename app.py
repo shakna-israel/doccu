@@ -63,7 +63,14 @@ def document_new(name):
         category = request.form['category']
         descriptor = request.form['descriptor']
         preamble = request.form['preamble']
-        content = request.form['document-proper']
+        proper = request.form['document-proper']
+        content = []
+        for line in proper.split('\n'):
+            line = line.replace('\r','')
+            content.append(line)
+        dict_to_store = {'title':title,'date':date,'date-renew':renew_date,'category':category,'descriptor':descriptor,'preamble':preamble,'content':content,'version':0}
+        filename = str(name) + ".db"
+        pickle.dump(dict_to_store,open(filename,"wb"))
         return render_template('new_document_submitted.html',title=title)
 
 if __name__ == "__main__":
