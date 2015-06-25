@@ -1,0 +1,41 @@
+(dp0
+S'category'
+p1
+(lp2
+Vtesting
+p3
+aV testdocs
+p4
+asS'descriptor'
+p5
+VPreamble\u000aThis preamble uses a copy and paste from Word, so we can test some of it\u2019s formatting features, and how they\u2019re translated.\u000a
+p6
+sS'version'
+p7
+I0
+sS'date-renew'
+p8
+V2015-06-26
+p9
+sS'title'
+p10
+Vword-test
+p11
+sS'date'
+p12
+V2015-06-25
+p13
+sS'content'
+p14
+(lp15
+VPreamble
+p16
+aVThis preamble uses a copy and paste from Word, so we can test some of it\u2019s formatting features, and how they\u2019re translated.
+p17
+aV
+p18
+asS'preamble'
+p19
+VPreamble\u000aThis preamble uses a copy and paste from Word, so we can test some of it\u2019s formatting features, and how they\u2019re translated.\u000a
+p20
+s.

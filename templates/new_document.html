@@ -1,12 +1,28 @@
 <!doctype html>
 <title>Doccu - New Document: {{title}}</title>
+<style>
+textarea { width: 100%; height: 6em; }
+#document-proper { height: 16em; }
+</style>
 <form action="/document/new/{{title}}/" method="POST">
+<p>Document Title:</p>
 <input name="title" type="text" required placeholder="{{title}}" /><br>
+<p>Approval Date:</p>
+<small>YYYY-MM-DD</small><br>
 <input name="date" type="date" required placeholder="Date of Activation." /><br>
+<p>Review Date:</p>
+<small>YYYY-MM-DD</small><br>
 <input name="date-renew" type="date" required placeholder="Date of Next Review." /><br>
+<p>Categories:</p>
+<small>Seperate multiple categories with commas</small><br>
 <input name="category" type="text" required placeholder="Categories, seperated by commas." /><br>
+<p>Document Descriptor:</p>
+<small>New lines will be ignored.</small>
 <textarea name="descriptor" required placeholder="Document descriptor."></textarea><br>
+<p>Document Preamble:</p>
+<small>New lines will be ignored.</small>
 <textarea name="preamble" required placeholder="Document preamble."></textarea><br>
-<textarea name="document-proper" required placeholder="Document Proper."></textarea><br>
+<p>Document Proper:</p>
+<textarea id="document-proper" name="document-proper" required placeholder="Document Proper."></textarea><br>
 <input value="Submit" type="submit" />
 </form>
