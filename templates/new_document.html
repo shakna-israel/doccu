@@ -1,0 +1,12 @@
+<!doctype html>
+<title>New Document: {{title}}</title>
+<form action="/document/new/{{title}}/" method="POST">
+<input name="title" type="text" required placeholder="{{title}}" /><br>
+<input name="date" type="date" required placeholder="Date of Activation." /><br>
+<input name="date-renew" type="date" required placeholder="Date of Next Review." /><br>
+<input name="category" type="text" required placeholder="Categories, seperated by commas." /><br>
+<textarea name="descriptor" required placeholder="Document descriptor."></textarea><br>
+<textarea name="preamble" required placeholder="Document preamble."></textarea><br>
+<textarea name="document-proper" required placeholder="Document Proper."></textarea><br>
+<input value="Submit" type="submit" />
+</form>
