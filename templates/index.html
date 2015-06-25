@@ -1,5 +1,8 @@
 <!doctype html>
-<title></title>
-{% for key in dicto %}
-    <p>{{key}}</p>
+<title>Doccu - Home</title>
+<h1>Policies Under Management:</h1>
+<ul>
+{% for policy in policies %}
+    <li><a href="/document/{{policy_url[policies.index(policy)]}}">{{policy}}</a></li>
 {% endfor %}
+</ul>

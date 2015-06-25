@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask, render_template, jsonify, request
 import glob
 try:
@@ -10,7 +11,14 @@ app = Flask(__name__,static_folder='static')
 @app.route("/")
 @app.route("/<name>/")
 def hello(name=None):
-    return render_template('index.html',dicto={'some':'dict','other':'dict'})
+    databases = glob.glob('*.db')
+    policy_title = []
+    policy_url = []
+    for database in databases:
+        document = pickle.load(open(database, "rb"))
+        policy_title.append(document['title'])
+        policy_url.append(database.replace(".db",''))
+    return render_template('index.html',policies=policy_title,policy_url=policy_url)
 
 @app.route("/category/<name>/")
 def show_category(name):
@@ -33,8 +41,8 @@ def document_fetch(name):
     renew_date = document['date-renew']
     version = document['version']
     category = document['category']
-    descriptor = document['descriptor']
-    preamble = document['preamble']
+    descriptor = document['descriptor'].replace('\r\n',' ')
+    preamble = document['preamble'].replace('\r\n',' ')
     content = document['content']
     return render_template('document.html',title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,file=name)
 
@@ -47,8 +55,8 @@ def json_fetch(name=None):
     renew_date = document['date-renew']
     version = document['version']
     category = document['category']
-    descriptor = document['descriptor']
-    preamble = document['preamble']
+    descriptor = document['descriptor'].replace('\r\n',' ')
+    preamble = document['preamble'].replace('\r\n',' ')
     content = document['content']
     return jsonify(title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,file=name)
 
@@ -60,7 +68,8 @@ def document_new(name):
         title = request.form['title']
         date = request.form['date']
         renew_date = request.form['date-renew']
-        category = request.form['category']
+        categories = request.form['category']
+        category = categories.split(',')
         descriptor = request.form['descriptor']
         preamble = request.form['preamble']
         proper = request.form['document-proper']
@@ -71,7 +80,7 @@ def document_new(name):
         dict_to_store = {'title':title,'date':date,'date-renew':renew_date,'category':category,'descriptor':descriptor,'preamble':preamble,'content':content,'version':0}
         filename = str(name) + ".db"
         pickle.dump(dict_to_store,open(filename,"wb"))
-        return render_template('new_document_submitted.html',title=title)
+        return render_template('new_document_submitted.html',title=title,filename=str(name))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)
