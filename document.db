@@ -5,16 +5,16 @@ S'2015-06-24'
 p2
 sS'category'
 p3
-S'test-docs'
+S'testdocs'
 p4
 sS'content'
 p5
 (lp6
-S'This is a lot of content'
+S'Some content'
 p7
-aS'that will hopefully be read'
+aS'is better than'
 p8
-aS'correctly'
+aS'no content.'
 p9
 asS'date-renew'
 p10
@@ -22,6 +22,6 @@ S'2016-06-24'
 p11
 sS'title'
 p12
-S'PolicyA1000'
+S'Documentation for Something Important'
 p13
 s.

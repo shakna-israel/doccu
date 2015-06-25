@@ -1,5 +1,16 @@
 <!doctype html>
 <title>{{title}}</title>
+<style>
+.data-collect {
+  position:fixed;
+  top:2em;
+  right:2em;
+  padding:1em;
+  box-shadow:0 0 8px rgba(128, 128, 128, 0.8);
+	-webkit-box-shadow:0 0 8px rgba(128, 128, 128, 0.8);
+	-moz-box-shadow:0 0 8px rgba(128, 128, 128, 0.8)
+}
+</style>
 <h2>Document: {{title}}</h2>
 <h3>Active: {{date}}</h3>
 <h3>Review: {{renew_date}}</h3>
@@ -7,5 +18,32 @@
 {% for line in content %}
     <p>{{line}}</p>
 {% endfor %}
+<div class="data-collect">
+  <input id="clickMe" type="button" value="Download PDF" onclick="pdfMake.createPdf(docDefinition).download('{{date}}{{title}}');" />
+  <p><a href="/document/{{file}}/json" target="_blank">JSON Data</a></p>
+</div>
 
-<script src="{{ url_for('static/js', filename='pdfmake.min.js') }}"></script>
+
+<script src="/static/js/pdfmake.min.js"></script>
+<script src="/static/js/vfs_fonts.js"></script>
+<script>
+var docDefinition = {
+  content: [
+    'Document: {{title}}',
+    '\n',
+    'Active: {{date}}',
+    '\n',
+    'Review: {{renew_date}}',
+    '\n',
+    'Category: {{category}}',
+    '\n',
+    {% for line in content %}
+        {% if line == content[-1] %}
+            '{{line}}'
+        {% else %}
+            '{{line}}',
+        {% endif %}
+    {% endfor %}
+  ]
+}
+</script>
