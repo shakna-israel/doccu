@@ -1,37 +1,0 @@
-(dp0
-S'category'
-p1
-(lp2
-Vdoccu
-p3
-aV testing
-p4
-asS'descriptor'
-p5
-VAn explanation of the functions of Doccu, the friendly documentation engine.
-p6
-sS'version'
-p7
-I0
-sS'date-renew'
-p8
-V2015-06-26
-p9
-sS'title'
-p10
-VDoccu
-p11
-sS'date'
-p12
-V2015-06-25
-p13
-sS'content'
-p14
-(lp15
-VThis document is under active development.
-p16
-asS'preamble'
-p17
-VDoccu is under active development, so many of it's features may come and go.\u000a\u000aWhen and how this happens should be obvious, as Doccu uses semantic versioning.\u000a\u000aFor example, we have a version number of 1.6.8\u000a\u000aThis means we are running the 1st major version.\u000a\u000aWe're also running the 6th version with new features.\u000a\u000aWe're also running the 8th patch version.
-p18
-s.

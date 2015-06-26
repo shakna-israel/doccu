@@ -11,7 +11,7 @@ app = Flask(__name__,static_folder='static')
 
 @app.route("/")
 @app.route("/<name>/")
-def home(name=None):
+def home(name="None"):
     databases = glob.glob('documents/*.db')
     policy = {}
     for database in databases:
@@ -28,8 +28,14 @@ def home(name=None):
         document = pickle.load(open(database, "rb"))
         categories.extend(document['category'])
     categories = sorted(list(set(categories)))
-    policy_title = sorted(list(set(policy_title)),reverse=True)
-    return render_template('index.html',policies=policy,categories=categories)
+    try:
+        policy_title = sorted(list(set(policy_title)),reverse=True)
+    except UnboundLocalError:
+        policy_title="None"
+    if not databases:
+        return render_template('index.html',policies={"None": {"url":""}},categories=["None"])
+    else:
+        return render_template('index.html',policies=policy,categories=categories)
 
 @app.route("/category/<name>/")
 def show_category(name):
@@ -193,4 +199,4 @@ def document_new(name):
 if __name__ == "__main__":
     logging.basicConfig(filename='error.log',level=logging.DEBUG)
     print("Running on port 5000, logging to error.log")
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0',debug=True)
