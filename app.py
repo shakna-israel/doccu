@@ -22,7 +22,6 @@ def home(name=None):
                 policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}
         except KeyError:
             policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}
-        print(policy)
     categories = []
     for database in databases:
         document = pickle.load(open(database, "rb"))
@@ -129,6 +128,8 @@ def document_edit(name):
         auth_db = pickle.load(open("ids.dbs", "rb"))
         if identifier not in auth_db.values():
             return redirect('/accessdenied')
+        if str(identifier) == '000000':
+            return redirect('/accessdenied')
         for key, value in auth_db.items():
             if identifier in value:
                 userid = key
@@ -163,6 +164,8 @@ def document_new(name):
         auth_db = pickle.load(open("ids.dbs", "rb"))
         if identifier not in auth_db.values():
             return redirect('/accessdenied')
+        if str(identifier) == '000000':
+            return redirect('/accessdenied')
         for key, value in auth_db.items():
             if identifier in value:
                 userid = key
@@ -187,4 +190,4 @@ def document_new(name):
         return render_template('new_document_submitted.html',title=title,filename=str(filename))
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',debug=True)
+    app.run(host='0.0.0.0')
