@@ -49,15 +49,15 @@
 <script src="/static/js/vfs_fonts.js"></script>
 <script>
 var docDefinition = {
-  pageSize: 'A4',
+  pageSize: "A4",
   pageMargins: [40, 60, 40, 60],
   header: {
     marginLeft: 20,
     marginRight: 20,
     marginTop: 20,
     columns: [
-      { text: 'Version: {{version}}, Approved: {{date}}'},
-      { text: '{{title}}', alignment: 'right' }
+      { text: "Version: {{version}}, Approved: {{date}}"},
+      { text: "{{title}}", alignment: "right" }
     ]
   },
   footer: function(pagenumber, pagecount) {
@@ -65,51 +65,51 @@ var docDefinition = {
         marginLeft: 20,
         marginRight: 20,
         columns: [
-           { text: 'Ballarat Christian College'},
-           { text: pagenumber.toString() + ' of ' + pagecount, alignment: 'right' },
+           { text: "Ballarat Christian College"},
+           { text: pagenumber.toString() + " of " + pagecount, alignment: "right" },
         ],
   }},
   content: [
-    { text: 'Document:', fontSize: 15 },
-    '{{title|safe}}',
-    '\n',
-    { text: 'Version:', fontSize: 15 },
-    '{{version}}',
-    '\n',
-    { text: 'Last Edited By:', fontSize: 8 },
-    { text: '{{userid}}', fontSize: 8 },
-    '\n',
-    { text: 'Active:', fontSize: 15 },
-    '{{date}}',
-    '\n',
-    { text: 'Review:', fontSize: 15 },
-    '{{renew_date}}',
-    '\n',
-    { text: 'Category:', fontSize: 15 },
-    '\n',
+    { text: "Document:", fontSize: 15 },
+    "{{title|safe}}",
+    "\n",
+    { text: "Version:", fontSize: 15 },
+    "{{version}}",
+    "\n",
+    { text: "Last Edited By:", fontSize: 8 },
+    { text: "{{userid}}", fontSize: 8 },
+    "\n",
+    { text: "Active:", fontSize: 15 },
+    "{{date}}",
+    "\n",
+    { text: "Review:", fontSize: 15 },
+    "{{renew_date}}",
+    "\n",
+    { text: "Category:", fontSize: 15 },
+    "\n",
     {
       ul: [
         {% for item in category %}
-            '{{item|safe}}',
+            "{{item|safe}}",
         {% endfor %}
       ],
-      pageBreak: 'after'
+      pageBreak: "after"
     },
-    '\n',
-    { text: 'Descriptor:', fontSize: 15 },
-    '\n',
-    '{{descriptor_json|safe}}',
-    { text: 'Preamble', fontSize: 15, pageBreak: 'before' },
-    '\n',
-    '{{preamble_json|safe}}',
-    '\n',
-    { text: 'Document Proper:', fontSize: 15, pageBreak: 'before' },
-    '\n',
+    "\n",
+    { text: "Descriptor:", fontSize: 15 },
+    "\n",
+    "{{descriptor_json|safe}}",
+    { text: "Preamble", fontSize: 15, pageBreak: "before" },
+    "\n",
+    "{{preamble_json|safe}}",
+    "\n",
+    { text: "Document Proper:", fontSize: 15, pageBreak: "before" },
+    "\n",
     {% for line in content_json %}
         {% if content_json.index(line) == content_json[-1] %}
-            '{{line|safe}}'
+            "{{line|safe}}"
         {% else %}
-            '{{line|safe}}',
+            "{{line|safe}}",
         {% endif %}
     {% endfor %}
   ]
