@@ -1,0 +1,106 @@
+(dp0
+S'category'
+p1
+(lp2
+Vdoccu
+p3
+asS'descriptor'
+p4
+VA document describer the functions and usage of Doccu, the documentation engine.
+p5
+sS'version'
+p6
+I0
+sS'date-renew'
+p7
+V2016-06-27
+p8
+sS'title'
+p9
+VDoccu
+p10
+sS'date'
+p11
+V2015-06-26
+p12
+sS'userid'
+p13
+S'James Milne'
+p14
+sS'content'
+p15
+(lp16
+V# Doccu
+p17
+aV
+p18
+aV## Setting Up Users
+p19
+ag18
+aVUser Management is done through the Management Console.
+p20
+ag18
+aVTo bring up this console, simply double-click the file called "manage.py".
+p21
+ag18
+aVYou will be presented with a choice, of three options.
+p22
+ag18
+aVIf you enter the number '1', and press enter, you will be able to generate a new user, or overwrite one that already exists.
+p23
+ag18
+aVIf you enter the number '2', and press enter, you will be able to remove a user from the database all together.
+p24
+ag18
+aVIf you enter the number '3', and press enter, you'll be able to manage the server. That is discussed in another section of this document.
+p25
+ag18
+aVSimply follow the prompts.
+p26
+ag18
+aV## Logging
+p27
+ag18
+aVThe server automatically logs all requests and errors to a file called 'error.log'.
+p28
+ag18
+aVThe words 'werkzeug' and 'flask' will appear throughout the document, these are the servers to allow Doccu to work.
+p29
+ag18
+aVTracebacks will appear when an error occurs within the server.
+p30
+ag18
+aV## Restarting the Server
+p31
+ag18
+aVIf the server has managed to crash due to some unforeseen circumstance, such as more than 10,000 simultaneous connections, then restarting it is simple.
+p32
+ag18
+aVOpen the Management Console by double-clicking the file called 'manage.py'.
+p33
+ag18
+aVType the number '3', and press enter.
+p34
+ag18
+aVIf an error still occurs, then something has gone fatally wrong with the server, and it's time to contact tech support.
+p35
+ag18
+aVPlease go to https://github.com/shakna-israel/doccu/issues/new, and fill out the form. Do NOT attach your log, as it may contain sensitive information. Rather, the tech support team will get in touch and ask you to send it via email.
+p36
+ag18
+aV## Creating a New Document
+p37
+ag18
+aV## Editing A Document
+p38
+ag18
+aV## Viewing an Old Version of a Document
+p39
+ag18
+aV## Help! I forgot my password!
+p40
+asS'preamble'
+p41
+VThis document is designed to be viewed by technical administrators, and content producers.\u000a\u000aVarious parts of this document will be relevant to varying audiences.
+p42
+s.
