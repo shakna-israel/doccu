@@ -49,7 +49,10 @@ def main():
 		wait = raw_input("Press enter to try exit.")
 		sys.exit()
 	elif str(choice) == '3':
-         subprocess.call(["python","app.py"])
+		 try:
+                     subprocess.call(["python","app.py"])
+		 except (KeyboardInterrupt, SystemExit):
+                     subprocess.call(["python","app.py"])
 	else:
 		choice = None
 		main()
