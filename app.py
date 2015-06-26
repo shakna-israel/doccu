@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect
 import glob
 try:
     import cpickle
@@ -10,34 +10,49 @@ app = Flask(__name__,static_folder='static')
 
 @app.route("/")
 @app.route("/<name>/")
-def hello(name=None):
-    databases = glob.glob('*.db')
-    policy_title = []
-    policy_url = []
+def home(name=None):
+    databases = glob.glob('documents/*.db')
+    policy = {}
     for database in databases:
         document = pickle.load(open(database, "rb"))
-        policy_title.append(document['title'])
-        policy_url.append(database.replace(".db",''))
-    return render_template('index.html',policies=policy_title,policy_url=policy_url)
+        database_url = str(database.replace(".db",'').replace("documents/",''))
+        policy_title = document['title']
+        try:
+            if document['version'] > policy[policy_title]['version']:
+                policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}
+        except KeyError:
+            policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}
+        print(policy)
+    categories = []
+    for database in databases:
+        document = pickle.load(open(database, "rb"))
+        categories.extend(document['category'])
+    categories = sorted(list(set(categories)))
+    policy_title = sorted(list(set(policy_title)),reverse=True)
+    return render_template('index.html',policies=policy,categories=categories)
 
 @app.route("/category/<name>/")
 def show_category(name):
-    databases = glob.glob('*.db')
-    in_category = []
-    in_category_url = []
+    databases = glob.glob('documents/*.db')
+    policy = {}
     for database in databases:
         document = pickle.load(open(database, "rb"))
         if name in document['category']:
             in_category.append(document['title'])
-            in_category_url.append(database.replace(".db",''))
-    return render_template('category.html',name=name, in_category=in_category,url=in_category_url)
+            in_category_url.append(database.replace(".db",'').replace("documents/",''))
+            in_category_ver.append(document['version'])
+    return render_template('category.html',name=name, in_category=in_category,url=in_category_url,ver=in_category_ver)
 
 @app.route("/document/<name>/")
 def document_fetch(name):
-    document_name = str(name) + ".db"
-    document = pickle.load(open(document_name, "rb"))
+    document_name = "documents/" + str(name) + ".db"
+    try:
+        document = pickle.load(open(document_name, "rb"))
+    except IOError:
+        return redirect('/')
     title = document['title']
     date = document['date']
+    userid = document['userid']
     renew_date = document['date-renew']
     version = document['version']
     category = document['category']
@@ -49,14 +64,21 @@ def document_fetch(name):
     content_json = document['content']
     for item in content_json:
         item = item.replace("'","\\'")
-    return render_template('document.html',title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,descriptor_json=descriptor_json,preamble_json=preamble_json,content_json=content_json,file=name)
+    path = request.path
+    return render_template('document.html',title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,descriptor_json=descriptor_json,preamble_json=preamble_json,content_json=content_json,file=name,userid=userid,path=path)
 
 @app.route("/document/<name>/json/")
 def json_fetch(name=None):
-    document_name = str(name) + ".db"
-    document = pickle.load(open(document_name, "rb"))
+    if name == 'new':
+        redirect('/')
+    document_name = "documents/" + str(name) + ".db"
+    try:
+        document = pickle.load(open(document_name, "rb"))
+    except IOError:
+        return redirect('/')
     title = document['title']
     date = document['date']
+    userid = document['userid']
     renew_date = document['date-renew']
     version = document['version']
     category = document['category']
@@ -65,29 +87,100 @@ def json_fetch(name=None):
     content = document['content']
     for item in content:
         item = item.replace("'","\\'")
-    return jsonify(title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,file=name)
+    path = request.path
+    return jsonify(title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,file=name,userid=userid,path=path)
 
-@app.route("/document/new/<name>/", methods=['GET','POST'])
-def document_new(name):
+@app.route('/accessdenied')
+def access_denied():
+    return render_template("new_document_denied.html")
+
+@app.route("/document/<name>/edit/", methods=['GET','POST'])
+def document_edit(name):
     if request.method == 'GET':
-        return render_template('new_document.html',title=name)
+        document_name = "documents/" + str(name) + ".db"
+        try:
+            document = pickle.load(open(document_name, "rb"))
+        except IOError:
+            return redirect('/')
+        title = document['title']
+        date = document['date']
+        renew_date = document['date-renew']
+        category = document['category']
+        categories = ""
+        for item in category:
+            categories = item + ", " + categories
+        descriptor = document['descriptor'].replace('\r\n',' ')
+        preamble = document['preamble'].replace('\r\n',' ')
+        version = document['version']
+        content = document['content']
+        content_html = ""
+        for item in content:
+            content_html = content_html + item + "\n"
+        return render_template('edit_document.html',title=name,date=date,renew_date=renew_date,category=categories,descriptor=descriptor,preamble=preamble,content=content_html,version=version)
     if request.method == 'POST':
-        title = request.form['title']
-        date = request.form['date']
-        renew_date = request.form['date-renew']
+        title = name
+        title = title.split('.')[-1]
+        title = title.replace("_"," ")
+        identifier = request.form['identifier']
+        auth_db = pickle.load(open("ids.dbs", "rb"))
+        if identifier not in auth_db.values():
+            return redirect('/accessdenied')
+        for key, value in auth_db.items():
+            if identifier in value:
+                userid = key
+        date = request.form['date'].strip()
+        renew_date = request.form['date-renew'].strip()
         categories = request.form['category']
         category = categories.split(',')
+        category = [item.strip(' ') for item in category]
         descriptor = request.form['descriptor']
         preamble = request.form['preamble']
         proper = request.form['document-proper']
+        version = request.form['version']
+        version = str(int(version) + 1)
         content = []
         for line in proper.split('\n'):
             line = line.replace('\r','')
             content.append(line)
-        dict_to_store = {'title':title,'date':date,'date-renew':renew_date,'category':category,'descriptor':descriptor,'preamble':preamble,'content':content,'version':0}
-        filename = str(name) + ".db"
+        dict_to_store = {'title':title,'date':date,'date-renew':renew_date,'category':category,'descriptor':descriptor,'preamble':preamble,'content':content,'version':version,'userid':userid}
+        filename = "documents/" + str(version) + "." + str(title).replace(" ", "_") + ".db"
         pickle.dump(dict_to_store,open(filename,"wb"))
-        return render_template('new_document_submitted.html',title=title,filename=str(name))
+        filename = filename.replace(".db",'').replace("documents/",'')
+        return render_template('new_document_submitted.html',filename=str(filename),title=title)
+
+@app.route("/document/new/<name>/", methods=['GET','POST'])
+def document_new(name):
+    if request.method == 'GET':
+        if name == 'json':
+            return redirect('/')
+        return render_template('new_document.html',title=name)
+    if request.method == 'POST':
+        identifier = request.form['identifier']
+        auth_db = pickle.load(open("ids.dbs", "rb"))
+        if identifier not in auth_db.values():
+            return redirect('/accessdenied')
+        for key, value in auth_db.items():
+            if identifier in value:
+                userid = key
+        title = request.form['title'].strip()
+        date = request.form['date'].strip()
+        renew_date = request.form['date-renew'].strip()
+        categories = request.form['category']
+        category = categories.split(',')
+        category = [item.strip(' ') for item in category]
+        descriptor = request.form['descriptor']
+        preamble = request.form['preamble']
+        proper = request.form['document-proper']
+        version = 0
+        content = []
+        for line in proper.split('\n'):
+            line = line.replace('\r','')
+            content.append(line)
+        dict_to_store = {'title':title,'date':date,'date-renew':renew_date,'category':category,'descriptor':descriptor,'preamble':preamble,'content':content,'version':version,'userid':userid}
+        filename = "documents/" + str(version) + "." + str(title).replace(" ", "_") + ".db"
+        pickle.dump(dict_to_store,open(filename,"wb"))
+        filename = filename.replace(".db",'').replace("documents/",'')
+        return render_template('new_document_submitted.html',title=title,filename=str(filename))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)

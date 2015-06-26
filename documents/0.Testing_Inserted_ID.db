@@ -1,0 +1,41 @@
+(dp0
+S'category'
+p1
+(lp2
+Vtesting
+p3
+aVtestdocs
+p4
+asS'descriptor'
+p5
+VTesting User ID insertion.
+p6
+sS'version'
+p7
+I0
+sS'date-renew'
+p8
+V2015-06-27
+p9
+sS'title'
+p10
+VTesting Inserted ID
+p11
+sS'date'
+p12
+V2015-06-26
+p13
+sS'userid'
+p14
+S'Trevor Clough'
+p15
+sS'content'
+p16
+(lp17
+VTesting User ID insertion.
+p18
+asS'preamble'
+p19
+VTesting User ID insertion.
+p20
+s.
