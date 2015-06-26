@@ -16,7 +16,7 @@ def home(name="None"):
     policy = {}
     for database in databases:
         document = pickle.load(open(database, "rb"))
-        database_url = str(database.replace(".db",'').replace("documents/",''))
+        database_url = str(database.replace(".db",'').replace("documents/",'')).replace("documents\\",'')
         policy_title = document['title']
         try:
             if document['version'] > policy[policy_title]['version']:
@@ -45,7 +45,7 @@ def show_category(name):
         document = pickle.load(open(database, "rb"))
         if name in document['category']:
             policy_title = document['title']
-            database_url = str(database.replace(".db",'').replace("documents/",''))
+            database_url = str(database.replace(".db",'').replace("documents/",'').replace("documents\\",''))
             try:
                 if document['version'] > policy[policy_title]['version']:
                     policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}
@@ -62,7 +62,7 @@ def document_fetch(name):
         return redirect('/')
     title = document['title']
     date = document['date']
-    userid = document['userid']
+    userid = document['userid'].upper()
     renew_date = document['date-renew']
     version = document['version']
     category = document['category']
@@ -88,7 +88,7 @@ def json_fetch(name=None):
         return redirect('/')
     title = document['title']
     date = document['date']
-    userid = document['userid']
+    userid = document['userid'].upper()
     renew_date = document['date-renew']
     version = document['version']
     category = document['category']
