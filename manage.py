@@ -51,8 +51,15 @@ def main():
 	elif str(choice) == '3':
 		 try:
                      subprocess.call(["python","app.py"])
-		 except (KeyboardInterrupt, SystemExit):
-                     subprocess.call(["python","app.py"])
+		 except SystemExit:
+                     try:
+                         subprocess.call(["python","app.py"])
+                     except SystemExit:
+                         subprocess.call(["python","app.py"])
+                     except KeyboardInterrupt:
+                        sys.exit()
+                 except KeyboardInterrupt:
+                        sys.exit()
 	else:
 		choice = None
 		main()
