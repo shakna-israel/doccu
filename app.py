@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, jsonify, request, redirect
 import glob
+import logging
 try:
     import cpickle
 except ImportError:
@@ -190,4 +191,6 @@ def document_new(name):
         return render_template('new_document_submitted.html',title=title,filename=str(filename))
 
 if __name__ == "__main__":
+    logging.basicConfig(filename='error.log',level=logging.DEBUG)
+    print("Running on port 5000, logging to error.log")
     app.run(host='0.0.0.0')
