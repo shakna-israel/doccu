@@ -38,10 +38,14 @@ def show_category(name):
     for database in databases:
         document = pickle.load(open(database, "rb"))
         if name in document['category']:
-            in_category.append(document['title'])
-            in_category_url.append(database.replace(".db",'').replace("documents/",''))
-            in_category_ver.append(document['version'])
-    return render_template('category.html',name=name, in_category=in_category,url=in_category_url,ver=in_category_ver)
+            policy_title = document['title']
+            database_url = str(database.replace(".db",'').replace("documents/",''))
+            try:
+                if document['version'] > policy[policy_title]['version']:
+                    policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}
+            except KeyError:
+                policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}
+    return render_template('category.html',name=name, policies=policy)
 
 @app.route("/document/<name>/")
 def document_fetch(name):

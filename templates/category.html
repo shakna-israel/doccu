@@ -13,8 +13,8 @@
 </style>
 <h2>Category: {{name}}</h2>
 <ul>
-{% for item in in_category %}
-    <li><a href="/document/{{url[in_category.index(item)]}}">{{ver[in_category.index(item)]}} - {{item}}</a></li>
+{% for item in policies %}
+    <li><a href="/document/{{policies[item]['url']}}">{{item}}</a></li>
 {% endfor %}
 </ul>
 
