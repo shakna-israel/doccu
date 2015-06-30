@@ -1,16 +1,6 @@
 <!doctype html>
 <title>Doccu - Home</title>
-<style>
-.data-collect {
-  position:fixed;
-  top:2em;
-  right:2em;
-  padding:1em;
-  box-shadow:0 0 8px rgba(128, 128, 128, 0.8);
-	-webkit-box-shadow:0 0 8px rgba(128, 128, 128, 0.8);
-	-moz-box-shadow:0 0 8px rgba(128, 128, 128, 0.8)
-}
-</style>
+{% include 'styles.html' %}
 <h1>Categories:</h1>
 <ul>
 {% for category in categories %}

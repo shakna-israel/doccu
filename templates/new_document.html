@@ -1,9 +1,6 @@
 <!doctype html>
 <title>Doccu - New Document: {{title}}</title>
-<style>
-textarea { width: 100%; height: 6em; }
-#document-proper { height: 16em; }
-</style>
+{% included 'styles.html' %}
 <form action="/document/new/{{title}}/" method="POST">
 <p>Document Title:</p>
 <input name="title" type="text" required placeholder="{{title}}" /><br>

@@ -1,16 +1,8 @@
 <!doctype html>
 <title>Doccu - {{title}}</title>
-<style>
-.data-collect {
-  position:fixed;
-  top:2em;
-  right:2em;
-  padding:1em;
-  box-shadow:0 0 8px rgba(128, 128, 128, 0.8);
-	-webkit-box-shadow:0 0 8px rgba(128, 128, 128, 0.8);
-	-moz-box-shadow:0 0 8px rgba(128, 128, 128, 0.8)
-}
-</style>
+{% include 'styles.html' %}
+<script src="/static/js/marked.min.js"></script>
+
 <h2>Document: {{title}}</h2>
 <h3>Active: {{date}}</h3>
 <h3>Version: {{version}}</h3>
@@ -32,9 +24,19 @@
 {{preamble}}
 <hr/>
 <h3>Document Proper:</h3>
-{% for line in content %}
-    <p>{{line}}</p>
-{% endfor %}
+<div id="markdownContent"></div>
+<script>
+    var content = ""
+    {% for line in content_json %}
+        {% if content_json.index(line) == "[object Window]" %}
+            var content = content + ""
+        {% else %}
+            var content = content + "\n" + "{{line|safe}}"
+        {% endif %}
+    {% endfor %}
+
+    document.getElementById('markdownContent').innerHTML = marked(content);
+</script>
 
 <div class="data-collect">
   <p><a href="/">Home</a></p>
