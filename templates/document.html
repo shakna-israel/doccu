@@ -1,6 +1,8 @@
 <!doctype html>
 <title>Doccu - {{title}}</title>
 {% include 'styles.html' %}
+{% include 'sidebar.html' %}
+
 <h2>Document: {{title}}</h2>
 <h3>Active: {{date}}</h3>
 <h3>Version: {{version}}</h3>
@@ -24,7 +26,6 @@
 <h3>Document Proper:</h3>
 {{content_markdown|safe}}
 
-{% include 'sidebar.html' %}
 
 <script src="/static/js/pdfmake.min.js"></script>
 <script src="/static/js/vfs_fonts.js"></script>

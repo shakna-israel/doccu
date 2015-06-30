@@ -1,16 +1,8 @@
 <!doctype html>
 <title>Doccu - Category: {{name}}</title>
-<style>
-.data-collect {
-  position:fixed;
-  top:2em;
-  right:2em;
-  padding:1em;
-  box-shadow:0 0 8px rgba(128, 128, 128, 0.8);
-	-webkit-box-shadow:0 0 8px rgba(128, 128, 128, 0.8);
-	-moz-box-shadow:0 0 8px rgba(128, 128, 128, 0.8)
-}
-</style>
+{% include 'styles.html' %}
+{% include 'sidebar.html' %}
+
 <h2>Category: {{name}}</h2>
 <ul>
 {% for item in policies %}
@@ -18,4 +10,3 @@
 {% endfor %}
 </ul>
 
-{% include 'sidebar.html' %}

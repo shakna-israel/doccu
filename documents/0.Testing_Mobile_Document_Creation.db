@@ -1,0 +1,41 @@
+(dp0
+S'category'
+p1
+(lp2
+Vtesting
+p3
+aVtestdocs
+p4
+asS'descriptor'
+p5
+VThis is a descriptor written on my phone.
+p6
+sS'version'
+p7
+I0
+sS'date-renew'
+p8
+V2015-06-27
+p9
+sS'title'
+p10
+VTesting Mobile Document Creation
+p11
+sS'date'
+p12
+V2015-06-26
+p13
+sS'userid'
+p14
+S'james milne'
+p15
+sS'content'
+p16
+(lp17
+VThis is the document proper.
+p18
+asS'preamble'
+p19
+VThis is the document preamble.
+p20
+s.
