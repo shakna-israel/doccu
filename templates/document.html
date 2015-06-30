@@ -16,10 +16,10 @@
 </ul>
 <hr/>
 <h3>Descriptor:</h3>
-{{descriptor}}
+{{descriptor|safe}}
 <hr/>
 <h3>Preamble:</h3>
-{{preamble}}
+{{preamble|safe}}
 <hr/>
 <h3>Document Proper:</h3>
 {{content_markdown|safe}}
@@ -95,8 +95,20 @@ var docDefinition = {
     {% for line in content_json %}
         {% if content_json.index(line) == content_json[-1] %}
             "{{line|safe}}"
+        {% elif "#" in line %}
+            {% if line.count("#") == 1 %}
+                { text: "{{line.replace("#","").strip()|safe}}", fontSize: 15, bold: true},
+                "\n",
+            {% elif line.count("#") == 2 %}
+                { text: "{{line.replace("#","").strip()|safe}}", fontSize: 13, bold: true},
+                "\n",
+            {% elif line.count("#") == 3 %}
+                { text: "{{line.replace("#","").strip()|safe}}", fontSize: 12, bold: true},
+                "\n",
+            {% endif %}
         {% else %}
             "{{line|safe}}",
+            "\n",
         {% endif %}
     {% endfor %}
   ]

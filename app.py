@@ -75,6 +75,7 @@ def document_fetch(name):
     preamble_json = document['preamble'].replace('\r\n',' ').replace("'","\\'")
     content = document['content']
     content_json = document['content']
+    content_json = [w.replace('"', "''") for w in content_json]
     content_markdown = ""
     for line in document['content']:
         content_markdown = content_markdown + "\n" + line
