@@ -24,13 +24,7 @@
 <h3>Document Proper:</h3>
 {{content_markdown|safe}}
 
-<div class="data-collect">
-  <p><a href="/">Home</a></p>
-  <input id="clickMe" type="button" value="Download PDF" onclick="pdfMake.createPdf(docDefinition).download('{{version}}_{{title}}_{{date}}');" />
-  <p><a href="/document/{{file}}/json" target="_blank">JSON Data</a></p>
-  <p><a href="{{path}}edit">Edit Document</a></p>
-  <p><a href="/document/new/new" target="_blank">New Document</a></p>
-</div>
+{% include 'sidebar.html' %}
 
 <script src="/static/js/pdfmake.min.js"></script>
 <script src="/static/js/vfs_fonts.js"></script>

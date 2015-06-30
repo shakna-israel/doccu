@@ -48,7 +48,7 @@ def show_category(name):
             policy_title = document['title']
             database_url = str(database.replace(".db",'').replace("documents/",'').replace("documents\\",''))
             try:
-                if document['version'] > policy[policy_title]['version']:
+                if int(document['version']) > int(policy[policy_title]['version']):
                     policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}
             except KeyError:
                 policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}

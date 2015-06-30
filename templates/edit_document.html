@@ -1,10 +1,7 @@
 <!doctype html>
 <title>Doccu - Editing: {{title}}</title>
 {% include 'styles.html' %}
-<div class="data-collect">
-  <p><a href="/">Home</a></p>
-  <p><a href="/document/new/new" target="_blank">New Document</a></p>
-</div>
+{% include 'sidebar.html' %}
 
 <form action="/document/{{title}}/edit/" method="POST">
 <p id="hidden">Version Number:</p>

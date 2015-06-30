@@ -1,6 +1,8 @@
 <!doctype html>
 <title>Doccu - New Document: {{title}}</title>
-{% included 'styles.html' %}
+{% include 'styles.html' %}
+{% include 'sidebar.html' %}
+
 <form action="/document/new/{{title}}/" method="POST">
 <p>Document Title:</p>
 <input name="title" type="text" required placeholder="{{title}}" /><br>
