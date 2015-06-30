@@ -2,6 +2,7 @@
 from flask import Flask, render_template, jsonify, request, redirect
 import glob
 import logging
+import markdown
 try:
     import cpickle
 except ImportError:
@@ -72,10 +73,14 @@ def document_fetch(name):
     preamble_json = document['preamble'].replace('\r\n',' ').replace("'","\\'")
     content = document['content']
     content_json = document['content']
+    content_markdown = ""
+    for line in document['content']:
+        content_markdown = content_markdown + "\n" + line
+    content_markdown = markdown.markdown(content_markdown)
     for item in content_json:
         item = item.replace("'","\\'")
     path = request.path
-    return render_template('document.html',title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,descriptor_json=descriptor_json,preamble_json=preamble_json,content_json=content_json,file=name,userid=userid,path=path)
+    return render_template('document.html',title=title,date=date,renew_date=renew_date,version=version,category=category,content=content,descriptor=descriptor,preamble=preamble,descriptor_json=descriptor_json,preamble_json=preamble_json,content_json=content_json,file=name,userid=userid,path=path,content_markdown=content_markdown)
 
 @app.route("/document/<name>/json/")
 def json_fetch(name=None):
