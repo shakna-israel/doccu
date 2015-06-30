@@ -68,8 +68,10 @@ def document_fetch(name):
     version = document['version']
     category = document['category']
     descriptor = document['descriptor'].replace('\r\n',' ')
+    descriptor = markdown.markdown(descriptor)
     descriptor_json = document['descriptor'].replace('\r\n',' ').replace("'","\\'")
     preamble = document['preamble'].replace('\r\n',' ')
+    premable = markdown.markdown(preamble)
     preamble_json = document['preamble'].replace('\r\n',' ').replace("'","\\'")
     content = document['content']
     content_json = document['content']
