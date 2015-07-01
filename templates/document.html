@@ -1,15 +1,14 @@
-<!doctype html>
-<title>Doccu - {{title}}</title>
+{% include 'header.html' %}
 {% include 'styles.html' %}
 {% include 'sidebar.html' %}
-
+<body>
 <h2>Document: {{title}}</h2>
 <h3>Active: {{date}}</h3>
 <h3>Version: {{version}}</h3>
 <h3>Review: {{renew_date}}</h3>
 <small>Last Edited By: {{userid}}</small>
 <h3>Category: </h3>
-<ul>
+<ul>y
 {% for item in category %}
      {% if item !='' %}
         <li><a href="/category/{{item}}">{{item}}</a></li>
@@ -109,3 +108,4 @@ var docDefinition = {
   ]
 }
 </script>
+</body>

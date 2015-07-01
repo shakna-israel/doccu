@@ -1,8 +1,7 @@
-<!doctype html>
-<title>Doccu - Home</title>
+{% include 'header.html' %}
 {% include 'styles.html' %}
 {% include 'sidebar.html' %}
-
+<body>
 <h1>Categories:</h1>
 <ul>
 {% for category in categories %}
@@ -18,3 +17,4 @@
 {% endfor %}
 </ul>
 
+</body>
