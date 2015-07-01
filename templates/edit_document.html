@@ -1,7 +1,7 @@
 {% include 'header.html' %}
+<body>
 {% include 'styles.html' %}
 {% include 'sidebar.html' %}
-<body>
 <form action="/document/{{title}}/edit/" method="POST">
 <p id="hidden">Version Number:</p>
 <input id="hidden" name="version" type="number" required placeholder="Version Number." value="{{version}}" /><br>

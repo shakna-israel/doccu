@@ -3,6 +3,7 @@ from flask import Flask, render_template, jsonify, request, redirect
 import glob
 import logging
 import markdown
+from os.path import expanduser
 try:
     import cpickle
 except ImportError:
@@ -13,11 +14,12 @@ app = Flask(__name__,static_folder='static')
 @app.route("/")
 @app.route("/<name>/")
 def home(name="None"):
-    databases = glob.glob('documents/*.db')
+    doccu_docs = expanduser("~/.doccu/documents")
+    databases = glob.glob(doccu_docs + '/*.db')
     policy = {}
     for database in databases:
         document = pickle.load(open(database, "rb"))
-        database_url = str(database.replace(".db",'').replace("documents/",'')).replace("documents\\",'')
+        database_url = str(database.replace(".db",'').replace(doccu_docs + '/',''))
         policy_title = document['title']
         try:
             if int(document['version']) > int(policy[policy_title]['version']):
@@ -40,13 +42,14 @@ def home(name="None"):
 
 @app.route("/category/<name>/")
 def show_category(name):
-    databases = glob.glob('documents/*.db')
+    doccu_docs = expanduser("~/.doccu/documents")
+    databases = glob.glob(doccu_docs + '/*.db')
     policy = {}
     for database in databases:
         document = pickle.load(open(database, "rb"))
         if name in document['category']:
             policy_title = document['title']
-            database_url = str(database.replace(".db",'').replace("documents/",'').replace("documents\\",''))
+            database_url = str(database.replace(".db",'').replace(doccu_docs + '/',''))
             try:
                 if int(document['version']) > int(policy[policy_title]['version']):
                     policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}
@@ -56,7 +59,8 @@ def show_category(name):
 
 @app.route("/document/<name>/")
 def document_fetch(name):
-    document_name = "documents/" + str(name) + ".db"
+    doccu_docs = expanduser("~/.doccu/documents")
+    document_name = doccu_docs + "/" + str(name) + ".db"
     try:
         document = pickle.load(open(document_name, "rb"))
     except IOError:
@@ -87,9 +91,10 @@ def document_fetch(name):
 
 @app.route("/document/<name>/json/")
 def json_fetch(name=None):
+    doccu_docs = expanduser("~/.doccu/documents")
     if name == 'new':
         redirect('/')
-    document_name = "documents/" + str(name) + ".db"
+    document_name = doccu_docs + "/" + str(name) + ".db"
     try:
         document = pickle.load(open(document_name, "rb"))
     except IOError:
@@ -115,7 +120,8 @@ def access_denied():
 @app.route("/document/<name>/edit/", methods=['GET','POST'])
 def document_edit(name):
     if request.method == 'GET':
-        document_name = "documents/" + str(name) + ".db"
+        doccu_docs = expanduser("~/.doccu/documents")
+        document_name = doccu_docs + "/" + str(name) + ".db"
         try:
             document = pickle.load(open(document_name, "rb"))
         except IOError:
@@ -165,7 +171,7 @@ def document_edit(name):
         dict_to_store = {'title':title,'date':date,'date-renew':renew_date,'category':category,'descriptor':descriptor,'preamble':preamble,'content':content,'version':version,'userid':userid}
         filename = "documents/" + str(version) + "." + str(title).replace(" ", "_") + ".db"
         pickle.dump(dict_to_store,open(filename,"wb"))
-        filename = filename.replace(".db",'').replace("documents/",'')
+        filename = filename.replace(".db",'').replace(doccu_docs,"")
         return render_template('new_document_submitted.html',filename=str(filename),title=title)
 
 @app.route("/document/new/<name>/", methods=['GET','POST'])
@@ -199,9 +205,10 @@ def document_new(name):
             line = line.replace('\r','')
             content.append(line)
         dict_to_store = {'title':title,'date':date,'date-renew':renew_date,'category':category,'descriptor':descriptor,'preamble':preamble,'content':content,'version':version,'userid':userid}
-        filename = "documents/" + str(version) + "." + str(title).replace(" ", "_") + ".db"
+        doccu_docs = expanduser("~/.doccu/documents")
+        filename = doccu_docs + "/" + str(version) + "." + str(title).replace(" ", "_") + ".db"
         pickle.dump(dict_to_store,open(filename,"wb"))
-        filename = filename.replace(".db",'').replace("documents/",'')
+        filename = filename.replace(".db",'').replace(doccu_docs,"")
         return render_template('new_document_submitted.html',title=title,filename=str(filename))
 
 if __name__ == "__main__":
