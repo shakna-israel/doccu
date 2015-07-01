@@ -2,6 +2,8 @@ import pickle
 import sys
 import subprocess
 import requests
+from os.path import expanduser
+import os
 
 def generate_id(name,code):
 	db = pickle.load(open("ids.dbs", "rb"))
@@ -44,7 +46,20 @@ def update_js():
                 fileOpen.write(chunk)
                 fileOpen.flush() 
 
+def gen_folder_struct():
+    doccu_home = expanduser("~/.doccu")
+    doccu_docs = expanduser("~/.doccu/documents")
+    if os.path.isdir(doccu_home):
+        if os.path.isdir(doccu_docs):
+            return True
+        else:
+            os.makedirs(doccu_docs)
+    else:
+        os.makedirs(doccu_home)
+        os.makedirs(doccu_docs)
+
 def main():
+        gen_folder_struct()
 	choice = raw_input("Enter 1 to ADD a user, and 2 to REMOVE a User, 3 to START the server, and 4 to updated browser-based dependencies:")
 	if str(choice) == '1':
 		unique_name = raw_input("Enter a users UNIQUE name, e.g. Trevor Clough: ")
