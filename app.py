@@ -34,9 +34,9 @@ def home(name="None"):
     except UnboundLocalError:
         policy_title="None"
     if not databases:
-        return render_template('index.html',policies={"None": {"url":""}},categories=["None"])
+        return render_template('index.html',policies={"None": {"url":""}},categories=["None"],title="Home")
     else:
-        return render_template('index.html',policies=policy,categories=categories)
+        return render_template('index.html',policies=policy,categories=categories,title="Home")
 
 @app.route("/category/<name>/")
 def show_category(name):
@@ -52,7 +52,7 @@ def show_category(name):
                     policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}
             except KeyError:
                 policy[policy_title] = {'title':policy_title, 'url': database_url, 'version': document['version']}
-    return render_template('category.html',name=name, policies=policy)
+    return render_template('category.html',name=name, policies=policy,title="Category: " + str(name))
 
 @app.route("/document/<name>/")
 def document_fetch(name):
@@ -110,7 +110,7 @@ def json_fetch(name=None):
 
 @app.route('/accessdenied')
 def access_denied():
-    return render_template("new_document_denied.html")
+    return render_template("new_document_denied.html",title="Access Denied")
 
 @app.route("/document/<name>/edit/", methods=['GET','POST'])
 def document_edit(name):
@@ -173,7 +173,7 @@ def document_new(name):
     if request.method == 'GET':
         if name == 'json':
             return redirect('/')
-        return render_template('new_document.html',title=name)
+        return render_template('new_document.html',title="New Document")
     if request.method == 'POST':
         identifier = request.form['identifier']
         auth_db = pickle.load(open("ids.dbs", "rb"))
