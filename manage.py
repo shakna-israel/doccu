@@ -1,6 +1,7 @@
 import pickle
 import sys
 import subprocess
+import requests
 
 def generate_id(name,code):
 	db = pickle.load(open("ids.dbs", "rb"))
@@ -29,8 +30,22 @@ def remove_id(name):
 	pickle.dump(db,open("ids.dbs","wb"))
 	print("User removed from database!")
 
+def update_js():
+    url_request = requests.get('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', stream=True)
+    with open('static/js/pdfmake.min.js','wb') as fileOpen:
+        for chunk in url_request.iter_content(chunk_size=1024):
+            if chunk:
+                fileOpen.write(chunk)
+                fileOpen.flush()
+    url_request = requests.get('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', stream=True)
+    with open('static/js/vfs_fonts.js','wb') as fileOpen:
+        for chunk in url_request.iter_content(chunk_size=1024):
+            if chunk:
+                fileOpen.write(chunk)
+                fileOpen.flush() 
+
 def main():
-	choice = raw_input("Enter 1 to ADD a user, and 2 to REMOVE a User, and 3 to START the server: ")
+	choice = raw_input("Enter 1 to ADD a user, and 2 to REMOVE a User, 3 to START the server, and 4 to updated browser-based dependencies:")
 	if str(choice) == '1':
 		unique_name = raw_input("Enter a users UNIQUE name, e.g. Trevor Clough: ")
 		unique_name = unique_name.strip()
@@ -60,7 +75,11 @@ def main():
                         sys.exit()
                  except KeyboardInterrupt:
                         sys.exit()
-	else:
+	elif str(choice) == '4':
+                 print("Updating javascript dependencies...")
+                 update_js()
+                 print("Updated!")
+        else:
 		choice = None
 		main()
 
