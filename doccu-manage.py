@@ -129,7 +129,7 @@ def main():
     gen_folder_struct()
     check_id_db()
     doccu_home = expanduser('~/.doccu')
-    choice = input("Enter\n1 to ADD a user\n2 to REMOVE a User\n3 to START the server\n4 to updated browser-based dependencies\n5 to updateserver-based dependencies\n6 to update the server core:")
+    choice = input("Enter\n1 to ADD a user\n2 to REMOVE a User\n3 to START the server\n4 to updated browser-based dependencies\n5 to update server-based dependencies\n6 to update the server core:")
     if str(choice) == '1':
         unique_name = input("Enter a users UNIQUE name, e.g. Andrew Conan: ")
         unique_name = unique_name.strip()
