@@ -44,4 +44,4 @@ And follow the prompts.
 
 ---
 
-Documentation is currently under development.
+Documentation is currently [under development](https://doccu.readthedocs.org/en/latest/).
