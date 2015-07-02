@@ -9,7 +9,8 @@ try:
 except ImportError:
     import pickle
 
-app = Flask(__name__,static_folder='static')
+doccu_static = expanduser('~/.doccu/static')
+app = Flask(__name__,static_folder=doccu_static)
 
 @app.route("/")
 @app.route("/<name>/")

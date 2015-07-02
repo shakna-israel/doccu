@@ -11,7 +11,8 @@ except NameError:
    pass
 
 def generate_id(name,code):
-    db = pickle.load(open("ids.dbs", "rb"))
+    doccu_home = expanduser("~/.doccu")
+    db = pickle.load(open(doccu_home + "/ids.dbs", "rb"))
     if code in db.values():
         print("Code not unique!")
         wait = input("Press enter to exit.")
@@ -28,24 +29,26 @@ def generate_id(name,code):
             wait = input("Press enter to exit.")
             sys.exit()
     db[name] = code
-    pickle.dump(db,open("ids.dbs","wb"))
+    pickle.dump(db,open(doccu_home + "/ids.dbs","wb"))
     print("User written to database!")
 
 def remove_id(name):
-    db = pickle.load(open("ids.dbs", "rb"))
+    doccu_home = expanduser("~/.doccu")
+    db = pickle.load(open(doccu_home + "/ids.dbs", "rb"))
     del db[name]
-    pickle.dump(db,open("ids.dbs","wb"))
+    pickle.dump(db,open(doccu_home + "/ids.dbs","wb"))
     print("User removed from database!")
 
 def update_js():
+    doccu_static = expanduser("~/.doccu/static")
     url_request = requests.get('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', stream=True)
-    with open('static/js/pdfmake.min.js','wb') as fileOpen:
+    with open(doccu_static + '/js/pdfmake.min.js','wb') as fileOpen:
         for chunk in url_request.iter_content(chunk_size=1024):
             if chunk:
                 fileOpen.write(chunk)
                 fileOpen.flush()
     url_request = requests.get('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', stream=True)
-    with open('static/js/vfs_fonts.js','wb') as fileOpen:
+    with open(doccu_static + '/js/vfs_fonts.js','wb') as fileOpen:
         for chunk in url_request.iter_content(chunk_size=1024):
             if chunk:
                 fileOpen.write(chunk)
@@ -54,14 +57,27 @@ def update_js():
 def gen_folder_struct():
     doccu_home = expanduser("~/.doccu")
     doccu_docs = expanduser("~/.doccu/documents")
+    doccu_static = expanduser("~/.doccu/static")
+    doccu_js = expanduser("~/.doccu/js")
     if os.path.isdir(doccu_home):
         if os.path.isdir(doccu_docs):
-            return True
+            if os.path.isdir(doccu_static):
+                if os.path.isdir(doccu_js):
+                    return True
+                else:
+                    os.makedirs(doccu_js)
+            else:
+                os.makedirs(doccu_static)
+                os.makedirs(doccu_js)
         else:
             os.makedirs(doccu_docs)
+            os.makedirs(doccu_static)
+            os.makedirs(js)
     else:
         os.makedirs(doccu_home)
         os.makedirs(doccu_docs)
+        os.makedirs(doccu_static)
+        os.makedirs(doccu_js)
 
 def main():
     gen_folder_struct()
