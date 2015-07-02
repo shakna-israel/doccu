@@ -4,6 +4,7 @@ import glob
 import logging
 import markdown
 from os.path import expanduser
+import jinja2
 try:
     import cpickle
 except ImportError:
@@ -149,11 +150,12 @@ def document_edit(name):
             content_html = content_html + item + "\n"
         return render_template('edit_document.html',title=name,date=date,renew_date=renew_date,category=categories,descriptor=descriptor,preamble=preamble,content=content_html,version=version)
     if request.method == 'POST':
+        doccu_home = expanduser('~/.doccu')
         title = name
         title = title.split('.')[-1]
         title = title.replace("_"," ")
         identifier = request.form['identifier']
-        auth_db = pickle.load(open("ids.dbs", "rb"))
+        auth_db = pickle.load(open(doccu_home + "/ids.dbs", "rb"))
         if identifier not in auth_db.values():
             return redirect('/accessdenied')
         if str(identifier) == '000000':
@@ -178,7 +180,7 @@ def document_edit(name):
         dict_to_store = {'title':title,'date':date,'date-renew':renew_date,'category':category,'descriptor':descriptor,'preamble':preamble,'content':content,'version':version,'userid':userid}
         filename = "documents/" + str(version) + "." + str(title).replace(" ", "_") + ".db"
         pickle.dump(dict_to_store,open(filename,"wb"))
-        filename = filename.replace(".db",'').replace(doccu_docs,"")
+        filename = filename.replace(".db",'').replace(doccu_docs,"").replace("/","")
         return render_template('new_document_submitted.html',filename=str(filename),title=title)
 
 @app.route("/document/new/<name>/", methods=['GET','POST'])
@@ -188,8 +190,9 @@ def document_new(name):
             return redirect('/')
         return render_template('new_document.html',title="New Document")
     if request.method == 'POST':
+        doccu_home = expanduser('~/.doccu')
         identifier = request.form['identifier']
-        auth_db = pickle.load(open("ids.dbs", "rb"))
+        auth_db = pickle.load(open(doccu_home + "/ids.dbs", "rb"))
         if identifier not in auth_db.values():
             return redirect('/accessdenied')
         if str(identifier) == '000000':
@@ -215,7 +218,8 @@ def document_new(name):
         doccu_docs = expanduser("~/.doccu/documents")
         filename = doccu_docs + "/" + str(version) + "." + str(title).replace(" ", "_") + ".db"
         pickle.dump(dict_to_store,open(filename,"wb"))
-        filename = filename.replace(".db",'').replace(doccu_docs,"")
+        filename = filename.replace(".db",'').replace(doccu_docs,"").replace("/","")
+        print(filename)
         return render_template('new_document_submitted.html',title=title,filename=str(filename))
 
 if __name__ == "__main__":
