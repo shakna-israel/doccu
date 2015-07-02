@@ -22,6 +22,12 @@ Then, run:
 python setup.py install
 ```
 
+Or install via pip:
+
+```
+pip install doccu
+```
+
 ---
 
 ## Usage
