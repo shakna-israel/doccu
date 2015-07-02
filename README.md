@@ -1,6 +1,6 @@
 # Doccu
 
-[PyPI](https://pypi.python.org/pypi/doccu)
+[![PyPI Version](https://img.shields.io/pypi/v/doccu.svg)](https://pypi.python.org/pypi/doccu) [![Documentation Status](https://readthedocs.org/projects/doccu/badge/?version=latest)](https://readthedocs.org/projects/doccu/?badge=latest)
 
 ## The Documentation Engine
 
