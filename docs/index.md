@@ -182,6 +182,8 @@ Running on port 5000, logging to error.log
 
 So long as this Terminal or Command Prompt is open, Doccu should continue to run.
 
+You can access Doccu at [http://localhost:5000](http://localhost:5000)
+
 ---
 
 ## Next Steps
