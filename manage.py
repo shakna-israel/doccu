@@ -63,6 +63,15 @@ def update_template(url, fileName):
                 fileOpen.write(chunk)
                 fileOpen.flush()
 
+def update_doccu_server():
+    doccu_home = expanduser("~/.doccu")
+    url_request = requests.get('https://raw.githubusercontent.com/shakna-israel/doccu-server/master/doccu-server.py', stream=True)
+    with open(doccu_home + '/doccu-server.py', 'wb') as fileOpen:
+        for chunk in url_request.iter_content(chunk_size=1024):
+            if chunk:
+                fileOpen.write(chunk)
+                fileOpen.flush()
+
 def update_all_templates():
     update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/index.html','index.html')
     update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/styles.html','styles.html')
@@ -110,6 +119,7 @@ def gen_folder_struct():
 
 def main():
     gen_folder_struct()
+    doccu_home = expanduser('~/.doccu')
     choice = input("Enter 1 to ADD a user\n2 to REMOVE a User\n3 to START the server\n4 to updated browser-based dependencies\n5 to updateserver-based dependencies:")
     if str(choice) == '1':
         unique_name = input("Enter a users UNIQUE name, e.g. Trevor Clough: ")
@@ -130,12 +140,12 @@ def main():
         sys.exit()
     elif str(choice) == '3':
         try:
-            subprocess.call(["python","app.py"])
+            subprocess.call(["python", doccu_home + "/doccu-server.py"])
         except SystemExit:
             try:
-                subprocess.call(["python","app.py"])
+                subprocess.call(["python", doccu_home + "/doccu-server.py"])
             except SystemExit:
-                subprocess.call(["python","app.py"])
+                subprocess.call(["python", doccu_home + "/doccu-server.py"])
             except KeyboardInterrupt:
                 sys.exit()
         except KeyboardInterrupt:
@@ -147,6 +157,10 @@ def main():
     elif str(choice) == '5':
         print("Updating templates...")
         update_all_templates()
+        print("Updated!")
+    elif str(choice) == '6':
+        print("Updating server...")
+        update_doccu_server()
         print("Updated!")
     else:
         choice = None
