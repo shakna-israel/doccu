@@ -1,5 +1,7 @@
 # Doccu
 
+[PyPI](https://pypi.python.org/pypi/doccu)
+
 ## The Documentation Engine
 
 ---
