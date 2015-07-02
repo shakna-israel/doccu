@@ -11,7 +11,7 @@ if sys.version_info < (2,5):
     raise NotImplementedError("Sorry, you need at least Python 2.5 or Python 3.x to use Doccu.")
 
 setup(name='doccu',
-      version='0.0.1',
+      version='0.0.2',
       description='Documentation Storage, Retrieval and Version Management',
       author='James Milne',
       author_email='jmilne@graphic-designer.com',
