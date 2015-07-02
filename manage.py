@@ -54,34 +54,63 @@ def update_js():
                 fileOpen.write(chunk)
                 fileOpen.flush() 
 
+def update_template(url, fileName):
+    doccu_templates = expanduser("~/.doccu/templates")
+    url_request = requests.get(url, stream=True)
+    with open(doccu_templates + '/' + fileName, 'wb') as fileOpen:
+        for chunk in url_request.iter_content(chunk_size=1024):
+            if chunk:
+                fileOpen.write(chunk)
+                fileOpen.flush()
+
+def update_all_templates():
+    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/index.html','index.html')
+    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/styles.html','styles.html')
+    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/sidebar.html','sidebar.html')
+    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document_submitted.html','new_document_submitted.html')
+    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document_denied.html','new_document_denied.html')
+    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document.html','new_document.html')
+    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/header.html','header.html')
+    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/edit_document.html','edit_document.html')
+    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/document.html','document.html')
+    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/category.html','category.html')
+
 def gen_folder_struct():
     doccu_home = expanduser("~/.doccu")
     doccu_docs = expanduser("~/.doccu/documents")
     doccu_static = expanduser("~/.doccu/static")
-    doccu_js = expanduser("~/.doccu/js")
+    doccu_js = expanduser("~/.doccu/static/js")
+    doccu_templates = expanduser("~/.doccu/templates")
     if os.path.isdir(doccu_home):
         if os.path.isdir(doccu_docs):
             if os.path.isdir(doccu_static):
                 if os.path.isdir(doccu_js):
-                    return True
+                    if os.path.isdir(doccu_templates):
+                        return True
+                    else:
+                        os.makedirs(doccu_templates)
                 else:
                     os.makedirs(doccu_js)
+                    os.makedirs(doccu_templates)
             else:
                 os.makedirs(doccu_static)
                 os.makedirs(doccu_js)
+                os.makedirs(doccu_templates)
         else:
             os.makedirs(doccu_docs)
             os.makedirs(doccu_static)
             os.makedirs(js)
+            os.makedirs(doccu_templates)
     else:
         os.makedirs(doccu_home)
         os.makedirs(doccu_docs)
         os.makedirs(doccu_static)
         os.makedirs(doccu_js)
+        os.makedirs(doccu_templates)
 
 def main():
     gen_folder_struct()
-    choice = input("Enter 1 to ADD a user, and 2 to REMOVE a User, 3 to START the server, and 4 to updated browser-based dependencies:")
+    choice = input("Enter 1 to ADD a user\n2 to REMOVE a User\n3 to START the server\n4 to updated browser-based dependencies\n5 to updateserver-based dependencies:")
     if str(choice) == '1':
         unique_name = input("Enter a users UNIQUE name, e.g. Trevor Clough: ")
         unique_name = unique_name.strip()
@@ -114,6 +143,10 @@ def main():
     elif str(choice) == '4':
         print("Updating javascript dependencies...")
         update_js()
+        print("Updated!")
+    elif str(choice) == '5':
+        print("Updating templates...")
+        update_all_templates()
         print("Updated!")
     else:
         choice = None

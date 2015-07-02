@@ -10,7 +10,13 @@ except ImportError:
     import pickle
 
 doccu_static = expanduser('~/.doccu/static')
+doccu_templates = expanduser('~/.doccu/templates')
 app = Flask(__name__,static_folder=doccu_static)
+
+template_loader = jinja2.ChoiceLoader([
+    jinja2.FileSystemLoader(doccu_templates),
+])
+app.jinja_loader = template_loader
 
 @app.route("/")
 @app.route("/<name>/")
