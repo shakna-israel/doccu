@@ -51,11 +51,16 @@ def update_js():
     doccu_static = expanduser("~/.doccu/static")
     download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/package.json', doccu_static + '/check-version')
     check_version_file = open(doccu_home + '/check-version', 'r')
-    current_version_file = open(doccu_home + '/current-version', 'r')
-    check_version = check_version_file[2]
-    current_version = current_version_file[2]
-    check_version_file.close()
-    current_version_file.close()
+    try:
+        current_version_file = open(doccu_home + '/current-version', 'r')
+        check_version = check_version_file[2]
+        current_version = current_version_file[2]
+        check_version_file.close()
+        current_version_file.close()
+    except IOError:
+        update = True
+        check_version = '1'
+        current_version = '0'
     if check_version == current_version:
         print("Equal version, no need to update.")
         update = False
@@ -74,13 +79,18 @@ def update_doccu_server():
     doccu_home = expanduser("~/.doccu")
     download_file('https://raw.githubusercontent.com/shakna-israel/doccu-server/master/version', doccu_home + '/check-version')
     check_version_file = open(doccu_home + '/check-version', 'r')
-    current_version_file = open(doccu_home + '/current-version', 'r')
-    for line in check_version_file:
-        check_version = line
-    for line in current_version_file:
-        current_version = line
-    check_version_file.close()
-    current_version_file.close()
+    try:
+        current_version_file = open(doccu_home + '/current-version', 'r')
+        for line in check_version_file:
+            check_version = line
+        for line in current_version_file:
+            current_version = line
+        check_version_file.close()
+        current_version_file.close()
+    except IOError:
+        update = True
+        check_version = '1'
+        current_version = '0'
     if check_version == current_version:
         print("Equal version, no need to update.")
         update = False
@@ -98,13 +108,18 @@ def update_all_templates():
     doccu_templates = expanduser('~/.doccu/templates')
     download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/version', doccu_templates + '/check-version')
     check_version_file = open(doccu_templates + '/check-version', 'r')
-    current_version_file = open(doccu_templates + '/current-version', 'r')
-    for line in check_version_file:
-        check_version = line
-    for line in current_version_file:
-        current_version = line
-    check_version_file.close()
-    current_version_file.close()
+    try:
+        current_version_file = open(doccu_templates + '/current-version', 'r')
+        for line in check_version_file:
+            check_version = line
+        for line in current_version_file:
+            current_version = line
+        check_version_file.close()
+        current_version_file.close()
+    except IOError:
+        update = True
+        check_version = '1'
+        current_version = '0'
     if check_version == current_version:
         print("Equal version, no need to update.")
         update = False
