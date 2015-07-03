@@ -73,16 +73,36 @@ def update_doccu_server():
                 fileOpen.flush()
 
 def update_all_templates():
-    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/index.html','index.html')
-    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/styles.html','styles.html')
-    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/sidebar.html','sidebar.html')
-    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document_submitted.html','new_document_submitted.html')
-    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document_denied.html','new_document_denied.html')
-    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document.html','new_document.html')
-    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/header.html','header.html')
-    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/edit_document.html','edit_document.html')
-    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/document.html','document.html')
-    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/category.html','category.html')
+    doccu_templates = expanduser('~/.doccu/templates')
+    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/version','check-version')
+    check_version_file = open(doccu_templates + '/check-version', 'r')
+    current_version_file = open(doccu_templates + '/current-version', 'r')
+    for line in check_version_file:
+        check_version = line
+    for line in current_version_file:
+        current_version = line
+    check_version_file.close()
+    current_version_file.close()
+    if check_version == current_version:
+        print("Equal version, no need to update.")
+        update = False
+    if check_version < current_version:
+        print("A newer version is available, updating.")
+        update = True
+    if current_version > check_version:
+        print("Error!")
+        assert VersionMismatch
+    if update:
+        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/index.html','index.html')
+        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/styles.html','styles.html')
+        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/sidebar.html','sidebar.html')
+        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document_submitted.html','new_document_submitted.html')
+        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document_denied.html','new_document_denied.html')
+        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document.html','new_document.html')
+        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/header.html','header.html')
+        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/edit_document.html','edit_document.html')
+        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/document.html','document.html')
+        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/category.html','category.html')
 
 def gen_folder_struct():
     doccu_home = expanduser("~/.doccu")
