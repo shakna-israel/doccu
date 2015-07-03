@@ -49,8 +49,26 @@ def download_file(url, fileName):
 
 def update_js():
     doccu_static = expanduser("~/.doccu/static")
-    download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', doccu_static + '/js/pdfmake.min.js')
-    download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', doccu_static + '/js/vfs_fonts.js')
+    download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/package.json', doccu_static + '/check-version')
+    check_version_file = open(doccu_home + '/check-version', 'r')
+    current_version_file = open(doccu_home + '/current-version', 'r')
+    check_version = check_version_file[2]
+    current_version = current_version_file[2]
+    check_version_file.close()
+    current_version_file.close()
+    if check_version == current_version:
+        print("Equal version, no need to update.")
+        update = False
+    if check_version < current_version:
+        print("A newer version is available, updating.")
+        update = True
+    if current_version > check_version:
+        print("Error!")
+        assert VersionMismatch
+    if update:
+        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', doccu_static + '/js/pdfmake.min.js')
+        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', doccu_static + '/js/vfs_fonts.js')
+        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/package.json', doccu_static + '/current-version')
 
 def update_doccu_server():
     doccu_home = expanduser("~/.doccu")
