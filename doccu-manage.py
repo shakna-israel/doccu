@@ -164,8 +164,26 @@ def main():
     gen_folder_struct()
     check_id_db()
     doccu_home = expanduser('~/.doccu')
-    choice = input("Enter\n1 to ADD a user\n2 to REMOVE a User\n3 to START the server\n4 to updated browser-based dependencies\n5 to update server-based dependencies\n6 to update the server core:")
+    choice = input("Enter\n1 to run initial setup\n2 to ADD a user\n3 to REMOVE a User\n4 to START the server\n5 to updated browser-based dependencies\n6 to update server-based dependencies\n7 to update the server core:")
     if str(choice) == '1':
+        unique_name = input("Enter a users UNIQUE name, e.g. Andrew Conan: ")
+        unique_name = unique_name.strip()
+        unique_name = unique_name.lower()
+        unique_code = input("Enter a users UNIQUE code, e.g. 00226677 ")
+        unique_code = unique_code.strip()
+        generate_id(unique_name,unique_code)
+        print("Done!")
+        wait = input("Press enter to move to the next step.")
+        print("Updating components...")
+        update_js()
+        print("30%...")
+        update_all_templates()
+        print("60%......")
+        update_doccu_server()
+        print("Done.")
+        wait = input("Press enter to move to exit.")
+        sys.exit()
+    if str(choice) == '2':
         unique_name = input("Enter a users UNIQUE name, e.g. Andrew Conan: ")
         unique_name = unique_name.strip()
         unique_name = unique_name.lower()
@@ -175,14 +193,14 @@ def main():
         print("Done!")
         wait = input("Press enter to try exit.")
         sys.exit()
-    elif str(choice) == '2':
+    elif str(choice) == '3':
         unique_name = input("Enter the user's UNIQUE name, e.g. Trevor Clough: ")
         unique_name = unique_name.strip()
         remove_id(unique_name)
         print("Done!")
         wait = input("Press enter to try exit.")
         sys.exit()
-    elif str(choice) == '3':
+    elif str(choice) == '4':
         try:
             subprocess.call(["python", doccu_home + "/doccu-server.py"])
         except SystemExit:
@@ -194,15 +212,15 @@ def main():
                 sys.exit()
         except KeyboardInterrupt:
             sys.exit()
-    elif str(choice) == '4':
+    elif str(choice) == '5':
         print("Updating javascript dependencies...")
         update_js()
         print("Updated!")
-    elif str(choice) == '5':
+    elif str(choice) == '6':
         print("Updating templates...")
         update_all_templates()
         print("Updated!")
-    elif str(choice) == '6':
+    elif str(choice) == '7':
         print("Updating server...")
         update_doccu_server()
         print("Updated!")
