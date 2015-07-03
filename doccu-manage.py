@@ -39,42 +39,46 @@ def remove_id(name):
     pickle.dump(db,open(doccu_home + "/ids.dbs","wb"))
     print("User removed from database!")
 
+def download_file(url, fileName):
+    url_request = requests.get(url, stream=True)
+    with open(fileName,'wb') as fileOpen:
+        for chunk in url_request.iter_content(chunk_size=1024):
+            if chunk:
+                fileOpen.write(chunk)
+                fileOpen.flush()
+
 def update_js():
     doccu_static = expanduser("~/.doccu/static")
-    url_request = requests.get('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', stream=True)
-    with open(doccu_static + '/js/pdfmake.min.js','wb') as fileOpen:
-        for chunk in url_request.iter_content(chunk_size=1024):
-            if chunk:
-                fileOpen.write(chunk)
-                fileOpen.flush()
-    url_request = requests.get('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', stream=True)
-    with open(doccu_static + '/js/vfs_fonts.js','wb') as fileOpen:
-        for chunk in url_request.iter_content(chunk_size=1024):
-            if chunk:
-                fileOpen.write(chunk)
-                fileOpen.flush() 
-
-def update_template(url, fileName):
-    doccu_templates = expanduser("~/.doccu/templates")
-    url_request = requests.get(url, stream=True)
-    with open(doccu_templates + '/' + fileName, 'wb') as fileOpen:
-        for chunk in url_request.iter_content(chunk_size=1024):
-            if chunk:
-                fileOpen.write(chunk)
-                fileOpen.flush()
+    download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', doccu_static + '/js/pdfmake.min.js')
+    download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', doccu_static + '/js/vfs_fonts.js')
 
 def update_doccu_server():
     doccu_home = expanduser("~/.doccu")
-    url_request = requests.get('https://raw.githubusercontent.com/shakna-israel/doccu-server/master/doccu-server.py', stream=True)
-    with open(doccu_home + '/doccu-server.py', 'wb') as fileOpen:
-        for chunk in url_request.iter_content(chunk_size=1024):
-            if chunk:
-                fileOpen.write(chunk)
-                fileOpen.flush()
+    download_file('https://raw.githubusercontent.com/shakna-israel/doccu-server/master/version', doccu_home + '/check-version')
+    check_version_file = open(doccu_home + '/check-version', 'r')
+    current_version_file = open(doccu_home + '/current-version', 'r')
+    for line in check_version_file:
+        check_version = line
+    for line in current_version_file:
+        current_version = line
+    check_version_file.close()
+    current_version_file.close()
+    if check_version == current_version:
+        print("Equal version, no need to update.")
+        update = False
+    if check_version < current_version:
+        print("A newer version is available, updating.")
+        update = True
+    if current_version > check_version:
+        print("Error!")
+        assert VersionMismatch
+    if update:
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-server/master/doccu-server.py', doccu_home + '/doccu-server.py')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-server/master/version', doccu_home + '/current-version')
 
 def update_all_templates():
     doccu_templates = expanduser('~/.doccu/templates')
-    update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/version','check-version')
+    download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/version', doccu_templates + '/check-version')
     check_version_file = open(doccu_templates + '/check-version', 'r')
     current_version_file = open(doccu_templates + '/current-version', 'r')
     for line in check_version_file:
@@ -93,16 +97,17 @@ def update_all_templates():
         print("Error!")
         assert VersionMismatch
     if update:
-        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/index.html','index.html')
-        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/styles.html','styles.html')
-        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/sidebar.html','sidebar.html')
-        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document_submitted.html','new_document_submitted.html')
-        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document_denied.html','new_document_denied.html')
-        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document.html','new_document.html')
-        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/header.html','header.html')
-        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/edit_document.html','edit_document.html')
-        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/document.html','document.html')
-        update_template('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/category.html','category.html')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/index.html', doccu_templates + '/index.html')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/styles.html', doccu_templates + '/styles.html')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/sidebar.html', doccu_templates + '/sidebar.html')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document_submitted.html', doccu_templates + '/new_document_submitted.html')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document_denied.html', doccu_templates + '/new_document_denied.html')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/new_document.html', doccu_templates + '/new_document.html')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/header.html', doccu_templates + '/header.html')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/edit_document.html', doccu_templates + '/edit_document.html')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/document.html', doccu_templates + '/document.html')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/category.html', doccu_templates + '/category.html')
+        download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/version', doccu_templates + '/current-version')
 
 def gen_folder_struct():
     doccu_home = expanduser("~/.doccu")
