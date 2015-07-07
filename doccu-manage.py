@@ -10,6 +10,10 @@ import requests
 from os.path import expanduser
 import os
 
+# Import linecache to make reading pdfmake's package.json easier.
+import linecache
+import re
+
 # Allow Python3 and Python2 inputs to play nicely together.
 try:
    input = raw_input
@@ -59,8 +63,31 @@ def download_file(url, fileName):
 def update_js():
     """Download all javascript dependencies of Doccu"""
     doccu_static = expanduser("~/.doccu/static")
-    download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', doccu_static + '/js/pdfmake.min.js')
-    download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', doccu_static + '/js/vfs_fonts.js')
+    update = True
+    try:
+        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/package.json', doccu_static + '/js/check-version')
+        check_version = linecache.getline(doccu_static + '/js/check-version', 3)
+        check_version = re.findall(r'\d+', check_version)
+        current_version = linecache.getline(doccu_static + '/js/current-version', 3)
+        current_version = re.findall(r'\d+', current_version)
+    except IOError:
+        update = True
+        check_version = '1'
+        current_version = '0'
+    if check_version == current_version:
+        print("Equal version, no need to update.")
+        update = False
+    if check_version < current_version:
+        print("A newer version is available, updating.")
+        update = True
+    # This should never be possible, but we can catch the error anyway:
+    if current_version > check_version:
+        print("Error!")
+        assert VersionMismatch
+    if update:
+        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', doccu_static + '/js/pdfmake.min.js')
+        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', doccu_static + '/js/vfs_fonts.js')
+        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/package.json', doccu_static + '/js/current-version')
 
 def update_doccu_server():
     """Download the Doccu server, if a new version is released."""
