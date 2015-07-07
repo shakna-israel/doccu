@@ -10,9 +10,13 @@ import requests
 from os.path import expanduser
 import os
 
-# Import linecache to make reading pdfmake's package.json easier.
+# Import linecache and Regular Expressions to make reading pdfmake's package.json easier.
 import linecache
 import re
+
+# Import multiprocessing so we can update in the background
+from multiprocessing import Pool, Process
+import time
 
 # Allow Python3 and Python2 inputs to play nicely together.
 try:
@@ -60,7 +64,7 @@ def download_file(url, fileName):
                 fileOpen.write(chunk)
                 fileOpen.flush()
 
-def update_js():
+def update_js(verbosity='Loud'):
     """Download all javascript dependencies of Doccu"""
     doccu_static = expanduser("~/.doccu/static")
     update = True
@@ -75,21 +79,24 @@ def update_js():
         check_version = '1'
         current_version = '0'
     if check_version == current_version:
-        print("Equal version, no need to update.")
+        if verbosity == 'Loud':
+            print("Equal version, no need to update.")
         update = False
     if check_version < current_version:
-        print("A newer version is available, updating.")
+        if verbosity == 'Loud':
+            print("A newer version is available, updating.")
         update = True
     # This should never be possible, but we can catch the error anyway:
     if current_version > check_version:
-        print("Error!")
+        if verbosity == 'Loud':
+            print("Error!")
         assert VersionMismatch
     if update:
         download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', doccu_static + '/js/pdfmake.min.js')
         download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', doccu_static + '/js/vfs_fonts.js')
         download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/package.json', doccu_static + '/js/current-version')
 
-def update_doccu_server():
+def update_doccu_server(verbosity='Loud'):
     """Download the Doccu server, if a new version is released."""
     doccu_home = expanduser("~/.doccu")
     # Download the version file, so we can check if we're up to date
@@ -110,20 +117,23 @@ def update_doccu_server():
         check_version = '1'
         current_version = '0'
     if check_version == current_version:
-        print("Equal version, no need to update.")
+        if verbosity == 'Loud':
+            print("Equal version, no need to update.")
         update = False
     if check_version < current_version:
-        print("A newer version is available, updating.")
+        if verbosity == 'Loud':
+            print("A newer version is available, updating.")
         update = True
     # This should never be possible, but we can catch the error anyway:
     if current_version > check_version:
-        print("Error!")
+        if verbosity == 'Loud':
+            print("Error!")
         assert VersionMismatch
     if update:
         download_file('https://raw.githubusercontent.com/shakna-israel/doccu-server/master/doccu-server.py', doccu_home + '/doccu-server.py')
         download_file('https://raw.githubusercontent.com/shakna-israel/doccu-server/master/version', doccu_home + '/current-version')
 
-def update_all_templates():
+def update_all_templates(verbosity='Loud'):
     """Download all of Doccu's templates, if a new version has been released."""
     doccu_templates = expanduser('~/.doccu/templates')
     download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/version', doccu_templates + '/check-version')
@@ -141,13 +151,16 @@ def update_all_templates():
         check_version = '1'
         current_version = '0'
     if check_version == current_version:
-        print("Equal version, no need to update.")
+        if verbosity == 'Loud':
+            print("Equal version, no need to update.")
         update = False
     if check_version < current_version:
-        print("A newer version is available, updating.")
+        if verbosity == 'Loud':
+            print("A newer version is available, updating.")
         update = True
     if current_version > check_version:
-        print("Error!")
+        if verbosity == 'Loud':
+            print("Error!")
         assert VersionMismatch
     if update:
         download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/index.html', doccu_templates + '/index.html')
@@ -205,11 +218,22 @@ def check_id_db():
         db = {}
         pickle.dump(db,open(doccu_home + "/ids.dbs","wb"))
 
+def auto_update():
+    now = time.time()
+    while time.time() < now + 60:
+        update_js('silent')
+        update_all_templates('silent')
+        update_doccu_server('silent')
+
 def main():
     gen_folder_struct()
     check_id_db()
     doccu_home = expanduser('~/.doccu')
+    updateProcess = Process(target=auto_update)
+    updateProcess.start()
+
     choice = input("Enter\n1 to run initial setup\n2 to ADD a user\n3 to REMOVE a User\n4 to START the server\n5 to updated browser-based dependencies\n6 to update server-based dependencies\n7 to update the server core:")
+
     if str(choice) == '1':
         unique_name = input("Enter a users UNIQUE name, e.g. Andrew Conan: ")
         unique_name = unique_name.strip()
