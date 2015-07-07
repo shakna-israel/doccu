@@ -219,11 +219,16 @@ def check_id_db():
         pickle.dump(db,open(doccu_home + "/ids.dbs","wb"))
 
 def auto_update():
+    """Run an update once per day"""
     now = time.time()
-    while time.time() < now + 60:
+    while time.time() < now + (60*60)*24:
         update_js('silent')
         update_all_templates('silent')
         update_doccu_server('silent')
+
+def clear():
+    """Clear the console on both Windows and Linux machines"""
+    os.system(['clear','cls'][os.name == 'nt'])
 
 def main():
     gen_folder_struct()
@@ -231,8 +236,8 @@ def main():
     doccu_home = expanduser('~/.doccu')
     updateProcess = Process(target=auto_update)
     updateProcess.start()
-
-    choice = input("Enter\n1 to run initial setup\n2 to ADD a user\n3 to REMOVE a User\n4 to START the server\n5 to updated browser-based dependencies\n6 to update server-based dependencies\n7 to update the server core:")
+    clear()
+    choice = input("Enter\n1 to run initial setup\n2 to ADD a user\n3 to REMOVE a User\n4 to START the server\n5 to updated browser-based dependencies\n6 to update server-based dependencies\n7 to update the server core\n8 to disable automatic updates\n9 to enable automatic updates:")
 
     if str(choice) == '1':
         unique_name = input("Enter a users UNIQUE name, e.g. Andrew Conan: ")
@@ -250,8 +255,8 @@ def main():
         print("60%......")
         update_doccu_server()
         print("Done.")
-        wait = input("Press enter to move to exit.")
-        sys.exit()
+        wait = input("Press enter to return to the menu.")
+        main()
     if str(choice) == '2':
         unique_name = input("Enter a users UNIQUE name, e.g. Andrew Conan: ")
         unique_name = unique_name.strip()
@@ -260,15 +265,15 @@ def main():
         unique_code = unique_code.strip()
         generate_id(unique_name,unique_code)
         print("Done!")
-        wait = input("Press enter to try exit.")
-        sys.exit()
+        wait = input("Press enter to return to the menu.")
+        main()
     elif str(choice) == '3':
         unique_name = input("Enter the user's UNIQUE name, e.g. Trevor Clough: ")
         unique_name = unique_name.strip()
         remove_id(unique_name)
         print("Done!")
-        wait = input("Press enter to try exit.")
-        sys.exit()
+        wait = input("Press enter to return to the menu.")
+        main()
     elif str(choice) == '4':
         try:
             subprocess.call(["python", doccu_home + "/doccu-server.py"])
@@ -281,18 +286,38 @@ def main():
                 sys.exit()
         except KeyboardInterrupt:
             sys.exit()
+        wait = input("Press enter to return to the menu.")
+        main()
     elif str(choice) == '5':
         print("Updating javascript dependencies...")
         update_js()
         print("Updated!")
+        wait = input("Press enter to return to the menu.")
+        main()
     elif str(choice) == '6':
         print("Updating templates...")
         update_all_templates()
         print("Updated!")
+        wait = input("Press enter to return to the menu.")
+        main()
     elif str(choice) == '7':
         print("Updating server...")
         update_doccu_server()
         print("Updated!")
+        wait = input("Press enter to return to the menu.")
+        main()
+    elif str(choice) == '8':
+        print("Automatic Updates stopped!")
+        updateProcess.terminate()
+        print("Automatic Updates are enabled by default and will restart if you close this window.")
+        wait = input("Press enter to return to the menu.")
+        main()
+    elif str(choice) == '9':
+        try:
+            print("Starting Automatic Updates...")
+            updateProcess.start()
+        except AssertionError:
+            print("Updates are already enabled!")
     else:
         choice = None
         main()
