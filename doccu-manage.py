@@ -1,16 +1,23 @@
+# Import the database.
 import pickle
+# Import sys so we can tell what OS we're using, and how it's folders work.
 import sys
+# Import subprocess so we can run the server in its own forking process.
 import subprocess
+# Import requests so we can access the web sensibly.
 import requests
+# Import expanduser so we can tell where the ~ folder is, cross-platform.
 from os.path import expanduser
 import os
 
+# Allow Python3 and Python2 inputs to play nicely together.
 try:
    input = raw_input
 except NameError:
    pass
 
 def generate_id(name,code):
+    """Add a user to Doccu's ID database."""
     doccu_home = expanduser("~/.doccu")
     db = pickle.load(open(doccu_home + "/ids.dbs", "rb"))
     if code in db.values():
@@ -33,6 +40,7 @@ def generate_id(name,code):
     print("User written to database!")
 
 def remove_id(name):
+    """Check for and remove a user from Doccu's ID database."""
     doccu_home = expanduser("~/.doccu")
     db = pickle.load(open(doccu_home + "/ids.dbs", "rb"))
     del db[name]
@@ -40,6 +48,7 @@ def remove_id(name):
     print("User removed from database!")
 
 def download_file(url, fileName):
+    """A procedural download, to allow for interruptions and large file sizes."""
     url_request = requests.get(url, stream=True)
     with open(fileName,'wb') as fileOpen:
         for chunk in url_request.iter_content(chunk_size=1024):
@@ -48,14 +57,18 @@ def download_file(url, fileName):
                 fileOpen.flush()
 
 def update_js():
+    """Download all javascript dependencies of Doccu"""
     doccu_static = expanduser("~/.doccu/static")
     download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', doccu_static + '/js/pdfmake.min.js')
     download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', doccu_static + '/js/vfs_fonts.js')
 
 def update_doccu_server():
+    """Download the Doccu server, if a new version is released."""
     doccu_home = expanduser("~/.doccu")
+    # Download the version file, so we can check if we're up to date
     download_file('https://raw.githubusercontent.com/shakna-israel/doccu-server/master/version', doccu_home + '/check-version')
     check_version_file = open(doccu_home + '/check-version', 'r')
+    # Load the version files; both the current one, and the one we have just downloaded.
     try:
         current_version_file = open(doccu_home + '/current-version', 'r')
         for line in check_version_file:
@@ -64,6 +77,7 @@ def update_doccu_server():
             current_version = line
         check_version_file.close()
         current_version_file.close()
+    # If no version is found, force an update.
     except IOError:
         update = True
         check_version = '1'
@@ -74,6 +88,7 @@ def update_doccu_server():
     if check_version < current_version:
         print("A newer version is available, updating.")
         update = True
+    # This should never be possible, but we can catch the error anyway:
     if current_version > check_version:
         print("Error!")
         assert VersionMismatch
@@ -82,6 +97,7 @@ def update_doccu_server():
         download_file('https://raw.githubusercontent.com/shakna-israel/doccu-server/master/version', doccu_home + '/current-version')
 
 def update_all_templates():
+    """Download all of Doccu's templates, if a new version has been released."""
     doccu_templates = expanduser('~/.doccu/templates')
     download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/version', doccu_templates + '/check-version')
     check_version_file = open(doccu_templates + '/check-version', 'r')
@@ -120,6 +136,7 @@ def update_all_templates():
         download_file('https://raw.githubusercontent.com/shakna-israel/doccu-templates/master/version', doccu_templates + '/current-version')
 
 def gen_folder_struct():
+    """Create Doccu's folder structure, skipping any folders that already exist."""
     doccu_home = expanduser("~/.doccu")
     doccu_docs = expanduser("~/.doccu/documents")
     doccu_static = expanduser("~/.doccu/static")
@@ -153,6 +170,7 @@ def gen_folder_struct():
         os.makedirs(doccu_templates)
 
 def check_id_db():
+    """Check if the ID database for Doccu exists, if not, create it."""
     doccu_home = expanduser('~/.doccu')
     if os.path.isfile(doccu_home + '/ids.dbs'):
         return True
