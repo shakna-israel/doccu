@@ -286,6 +286,7 @@ class Maintainence(Frame):
                     subprocess.check_call(['thunar', path])
         elif sys.platform == 'win32':
             def openFolder(path):
+                path = path.replace("/","\\")
                 subprocess.check_call(['explorer', path])
         else:
             popup("Platform not detected, unable to open ~/.doccu")
