@@ -304,6 +304,9 @@ class Maintainence(Frame):
     def update_resources(self):
         # Download the server
         download_file("https://raw.githubusercontent.com/shakna-israel/doccu-server/master/doccu_server.py",os.path.expanduser("~/.doccu/doccu_server.py"))
+        download_file("https://raw.githubusercontent.com/shakna-israel/doccu-server/master/sendmail.py",os.path.expanduser("~/.doccu/sendmail.py"))
+        download_file("https://raw.githubusercontent.com/shakna-israel/doccu-server/master/piedown.py",os.path.expanduser("~/.doccu/piedown.py"))
+        download_file("https://raw.githubusercontent.com/shakna-israel/doccu-server/master/lib.py",os.path.expanduser("~/.doccu/lib.py"))
         # Download the js stuff
         download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', os.path.expanduser('~/.doccu/static/js/pdfmake.min.js'))
         download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', os.path.expanduser('~/.doccu/static/js/vfs_fonts.js'))
