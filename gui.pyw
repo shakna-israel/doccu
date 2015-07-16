@@ -241,7 +241,10 @@ class RunServer(Frame):
         self.button.pack({"side":"bottom"})
 
     def launch_server(self):
-        popup()
+        server_path = os.path.expanduser("~/.doccu/doccu_server.py")
+        if sys.platform == 'win32':
+            server_path = server_path.replace("/","\\")
+        subprocess.call(["python", server_path])
 
 class Maintainence(Frame):
     def __init__(self, master=None):
