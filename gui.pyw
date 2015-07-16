@@ -6,7 +6,10 @@ except ImportError:
 import os
 import json
 import requests
+import subprocess
+import sys
 
+import time
 class DoccuTitle(Frame):
 
     def __init__(self, master=None):
@@ -222,29 +225,6 @@ class ListUsers(Frame):
         self.label["text"] = label_text
         self.label.pack()
 
-class UpdateResources(Frame):
-    def __init__(self, master=None):
-        Frame.__init__(self, master)
-        self.title_label = Label(self)
-        self.title_label['text'] = "Update Resources"
-        self.title_label.pack({"side":"top"})
-        self.pack({"side":"left"},fill='x', expand=1)
-        self.createWidgets()
-
-    def createWidgets(self):
-        self.button = Button(self)
-        self.button["text"] = "Update Resources",
-        self.button["command"] = self.update_resources
-        self.button.pack({"side":"bottom"})
-
-    def update_resources(self):
-        # Download the server
-        download_file("https://raw.githubusercontent.com/shakna-israel/doccu-server/master/doccu_server.py",os.path.expanduser("~/.doccu/doccu_server.py"))
-        # Download the js stuff
-        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', os.path.expanduser('~/.doccu/static/js/pdfmake.min.js'))
-        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', os.path.expanduser('~/.doccu/static/js/vfs_fonts.js'))
-        popup("Files downloaded!")
-
 class RunServer(Frame):
     def __init__(self, master=None):
         Frame.__init__(self, master)
@@ -262,6 +242,68 @@ class RunServer(Frame):
 
     def launch_server(self):
         popup()
+
+class Maintainence(Frame):
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.title_label = Label(self)
+        self.title_label['text'] = "Maintainence"
+        self.title_label.pack({"side":"top"})
+        self.pack({"side":"left"},fill='x', expand=1)
+        self.createWidgets()
+
+    def createWidgets(self):
+        self.button_fix = Button(self)
+        self.button_fix["text"] = "Fix Directory Structure",
+        self.button_fix["command"] = self.fixfolders
+        self.button_fix.pack()
+
+        self.button_dl = Button(self)
+        self.button_dl["text"] = "Update Resources",
+        self.button_dl["command"] = self.update_resources
+        self.button_dl.pack()
+
+        self.button_archive = Button(self)
+        self.button_archive["text"] = "Open Doccu's Directory"
+        self.button_archive["command"] = self.open_archive
+        self.button_archive.pack()
+
+    def open_archive(self):
+        if sys.platform == 'darwin':
+            def openFolder(path):
+                subprocess.check_call(['open', '--', path])
+        elif sys.platform == 'linux2':
+            def openFolder(path):
+                try:
+                    subprocess.check_call(['gnome-open', '--', path])
+                except:
+                    subprocess.check_call(['thunar', path])
+        elif sys.platform == 'linux':
+            def openFolder(path):
+                try:
+                    subprocess.check_call(['gnome-open', '--', path])
+                except:
+                    subprocess.check_call(['thunar', path])
+        elif sys.platform == 'win32':
+            def openFolder(path):
+                subprocess.check_call(['explorer', path])
+        else:
+            popup("Platform not detected, unable to open ~/.doccu")
+        openFolder(os.path.expanduser("~/.doccu"))
+
+    def fixfolders(self):
+        if fix_directory_tree() == True:
+            popup("No repairs needed.")
+        else:
+            popup("Folders repaired.")
+
+    def update_resources(self):
+        # Download the server
+        download_file("https://raw.githubusercontent.com/shakna-israel/doccu-server/master/doccu_server.py",os.path.expanduser("~/.doccu/doccu_server.py"))
+        # Download the js stuff
+        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', os.path.expanduser('~/.doccu/static/js/pdfmake.min.js'))
+        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', os.path.expanduser('~/.doccu/static/js/vfs_fonts.js'))
+        popup("Files downloaded!")
 
 def create_user(username, useremail, usergroup, userkey):
     userdict = {}
@@ -293,6 +335,50 @@ def download_file(url, fileName):
                 fileOpen.write(chunk)
                 fileOpen.flush()
 
+def fix_directory_tree():
+    """Create Doccu's folder structure, skipping any folders that already exist."""
+    doccu_home = os.path.expanduser("~/.doccu")
+    doccu_docs = os.path.expanduser("~/.doccu/documents")
+    doccu_static = os.path.expanduser("~/.doccu/static")
+    doccu_js = os.path.expanduser("~/.doccu/static/js")
+    doccu_templates = os.path.expanduser("~/.doccu/templates")
+    if os.path.isdir(doccu_home):
+        if os.path.isdir(doccu_docs):
+            if os.path.isdir(doccu_static):
+                if os.path.isdir(doccu_js):
+                    if os.path.isdir(doccu_templates):
+                        if not os.path.isfile(os.path.expanduser('~/.doccu/ids.dbs')):
+                            popup("Problem found with user database... Regenerating file...\n\nWARNING: You probably have lost all users!")
+                            id_dict = {}
+                            json.dump(id_dict,open(os.path.expanduser('~/.doccu/ids.dbs'),"w+"), sort_keys=True, indent=4, separators=(',', ': '))
+                        else:
+                            return True
+                    else:
+                        popup("Problem found with file structure... Fixing...")
+                        os.makedirs(doccu_templates)
+                else:
+                    popup("Problem found with file structure... Fixing...")
+                    os.makedirs(doccu_js)
+                    os.makedirs(doccu_templates)
+            else:
+                popup("Problem found with file structure... Fixing...")
+                os.makedirs(doccu_static)
+                os.makedirs(doccu_js)
+                os.makedirs(doccu_templates)
+        else:
+            popup("Problem found with file structure... Fixing...")
+            os.makedirs(doccu_docs)
+            os.makedirs(doccu_static)
+            os.makedirs(js)
+            os.makedirs(doccu_templates)
+    else:
+        popup("Problem found with file structure... Fixing...")
+        os.makedirs(doccu_home)
+        os.makedirs(doccu_docs)
+        os.makedirs(doccu_static)
+        os.makedirs(doccu_js)
+        os.makedirs(doccu_templates)
+
 def main():
     root = Tk()
     root.wm_title("Doccu Management Console")
@@ -301,12 +387,12 @@ def main():
     doccuPretty = DoccuTitle(master=root)
     userForms = UserForms(master=root)
     userList = ListUsers(master=root)
-    updateResources = UpdateResources(master=root)
+    maintainenceItems = Maintainence(master=root)
     runServer = RunServer(master=root)
     doccuPretty.mainloop()
     UserForms.mainloop()
     userList.mainloop()
-    updateResources.mainloop()
+    maintainenceItems.mainloop()
     runServer.mainloop()
     root.destroy()
 
