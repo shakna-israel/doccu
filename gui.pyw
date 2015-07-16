@@ -5,6 +5,7 @@ except ImportError:
 
 import os
 import json
+import requests
 
 class DoccuTitle(Frame):
 
@@ -28,7 +29,6 @@ class UserForms(Frame):
         self.pack({"side":"left"})
         self.home_label = Label(self)
         self.home_label['text'] = "Users"
-        self.home_label['font'] = 'Helvetica'
         self.home_label.pack({"side":"top"})
         self.createWidgets()
 
@@ -194,14 +194,74 @@ class UserForms(Frame):
             popup("Sorry, that user does not exist!")
         
 
-class UpdateResources(Frame):
+class ListUsers(Frame):
     def __init__(self, master=None):
         Frame.__init__(self, master)
-        self.pack()
+        self.title_label = Label(self)
+        self.title_label['text'] = "Current Users"
+        self.title_label.pack({"side":"top"})
+        self.pack({"side":"left"})
         self.createWidgets()
 
     def createWidgets(self):
-        print("Not Yet Implemented")
+        self.username_refresh_button = Button(self)
+        self.username_refresh_button["text"] = "Refresh Users",
+        self.username_refresh_button["command"] = self.refresh_user_list
+        self.username_refresh_button.pack({"side":"bottom"})
+
+    def refresh_user_list(self):
+        try:
+            self.label.destroy()
+        except AttributeError:
+            pass
+        users = json.load(open(os.path.expanduser('~/.doccu/ids.dbs'),'r'))
+        self.label = Label(self)
+        label_text = ""
+        for user in users:
+            label_text = label_text + "\n" + str(user)
+        self.label["text"] = label_text
+        self.label.pack()
+
+class UpdateResources(Frame):
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.title_label = Label(self)
+        self.title_label['text'] = "Update Resources"
+        self.title_label.pack({"side":"top"})
+        self.pack({"side":"left"},fill='x', expand=1)
+        self.createWidgets()
+
+    def createWidgets(self):
+        self.button = Button(self)
+        self.button["text"] = "Update Resources",
+        self.button["command"] = self.update_resources
+        self.button.pack({"side":"bottom"})
+
+    def update_resources(self):
+        # Download the server
+        download_file("https://raw.githubusercontent.com/shakna-israel/doccu-server/master/doccu_server.py",os.path.expanduser("~/.doccu/doccu_server.py"))
+        # Download the js stuff
+        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/pdfmake.min.js', os.path.expanduser('~/.doccu/static/js/pdfmake.min.js'))
+        download_file('https://raw.githubusercontent.com/bpampuch/pdfmake/master/build/vfs_fonts.js', os.path.expanduser('~/.doccu/static/js/vfs_fonts.js'))
+        popup("Files downloaded!")
+
+class RunServer(Frame):
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.title_label = Label(self)
+        self.title_label['text'] = "Launch Server"
+        self.title_label.pack({"side":"top"})
+        self.pack({"side":"left"},fill='x', expand=1)
+        self.createWidgets()
+
+    def createWidgets(self):
+        self.button = Button(self)
+        self.button["text"] = "Launch Server",
+        self.button["command"] = self.launch_server
+        self.button.pack({"side":"bottom"})
+
+    def launch_server(self):
+        popup()
 
 def create_user(username, useremail, usergroup, userkey):
     userdict = {}
@@ -224,6 +284,14 @@ def popup(stringText="Not Yet Implemented"):
     closewindow["command"] = toplevel.destroy 
     closewindow.pack()
 
+def download_file(url, fileName):
+    """A procedural download, to allow for interruptions and large file sizes."""
+    url_request = requests.get(url, stream=True)
+    with open(fileName,'wb') as fileOpen:
+        for chunk in url_request.iter_content(chunk_size=1024):
+            if chunk:
+                fileOpen.write(chunk)
+                fileOpen.flush()
 
 def main():
     root = Tk()
@@ -231,9 +299,15 @@ def main():
     w, h = root.winfo_screenwidth(), root.winfo_screenheight()
     root.geometry("%dx%d+0+0" % (w, h))
     doccuPretty = DoccuTitle(master=root)
-    app = UserForms(master=root)
+    userForms = UserForms(master=root)
+    userList = ListUsers(master=root)
+    updateResources = UpdateResources(master=root)
+    runServer = RunServer(master=root)
     doccuPretty.mainloop()
-    app.mainloop()
+    UserForms.mainloop()
+    userList.mainloop()
+    updateResources.mainloop()
+    runServer.mainloop()
     root.destroy()
 
 if __name__ == '__main__':
