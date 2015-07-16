@@ -6,11 +6,30 @@ except ImportError:
 import os
 import json
 
+class DoccuTitle(Frame):
+
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.pack({"side":"top"})
+        self.createWidgets()
+
+    def createWidgets(self):
+        self.doccu_label = Label(self)
+        self.doccu_label['text'] = "Doccu"
+        self.doccu_label2 = Label(self)
+        self.doccu_label2['text'] = "Your Friendly Documentation Engine"
+        self.doccu_label.pack()
+        self.doccu_label2.pack()
+
 class UserForms(Frame):
 
     def __init__(self, master=None):
         Frame.__init__(self, master)
-        self.pack()
+        self.pack({"side":"left"})
+        self.home_label = Label(self)
+        self.home_label['text'] = "Users"
+        self.home_label['font'] = 'Helvetica'
+        self.home_label.pack({"side":"top"})
         self.createWidgets()
 
     def createWidgets(self):
@@ -155,26 +174,25 @@ class UserForms(Frame):
             if useremail != 'example@example.com':
                 if '@' in useremail:
                     if '.' in useremail:
-                        if username not in check_keys:
+                        if not check_keys.values():
+                            create_user(username, useremail, usergroup, userkey)
+                            popup("User Succesfully Added")
+                        else:
                             for user in check_keys.values():
                                 if userkey != user['key']:
-                                    if create_user(username, useremail, usergroup, userkey) == 'True':
-                                        toplevel = Toplevel()
-                                        label1 = Label(toplevel, text="User Added Succesfully.", height=0, width=50)
-                                        label1.pack()
-                                        closewindow = Button(toplevel)
-                                        closewindow["text"] = "Ok",
-                                        closewindow["command"] = toplevel.destroy 
-                                        closewindow.pack()
+                                    create_user(username, useremail, usergroup, userkey)
+                                    popup("User Succesfully Added")
 
     def remove_user(self):
-        toplevel = Toplevel()
-        label1 = Label(toplevel, text="Not Yet Implemented.", height=0, width=50)
-        label1.pack()
-        closewindow = Button(toplevel)
-        closewindow["text"] = "Ok",
-        closewindow["command"] = toplevel.destroy 
-        closewindow.pack()
+        username = self.username_entry_contents.get().lower()
+        check_keys = json.load(open(os.path.expanduser('~/.doccu/ids.dbs'),'r'))
+        try:
+            del check_keys[username]
+            json.dump(check_keys,open(os.path.expanduser('~/.doccu/ids.dbs'),"w+"), sort_keys=True, indent=4, separators=(',', ': '))
+            popup("User Succesfully Deleted")
+        except KeyError:
+            popup("Sorry, that user does not exist!")
+        
 
 class UpdateResources(Frame):
     def __init__(self, master=None):
@@ -197,11 +215,24 @@ def create_user(username, useremail, usergroup, userkey):
     json.dump(outDict,open(os.path.expanduser('~/.doccu/ids.dbs'),"w+"), sort_keys=True, indent=4, separators=(',', ': '))
     return True
 
+def popup(stringText="Not Yet Implemented"):
+    toplevel = Toplevel()
+    label1 = Label(toplevel, text=str(stringText), height=0, width=50)
+    label1.pack()
+    closewindow = Button(toplevel)
+    closewindow["text"] = "Ok",
+    closewindow["command"] = toplevel.destroy 
+    closewindow.pack()
+
 
 def main():
     root = Tk()
     root.wm_title("Doccu Management Console")
+    w, h = root.winfo_screenwidth(), root.winfo_screenheight()
+    root.geometry("%dx%d+0+0" % (w, h))
+    doccuPretty = DoccuTitle(master=root)
     app = UserForms(master=root)
+    doccuPretty.mainloop()
     app.mainloop()
     root.destroy()
 
