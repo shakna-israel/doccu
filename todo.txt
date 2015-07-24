@@ -1,0 +1,9 @@
+2015-07-24 (Management Console) Automatic Updating System
+2015-07-24 (Management Console) Capital User Names
+2015-07-24 (Management Console) Background Server Daemon
+2015-07-24 (Management Console) UnitTests for TK
+2015-07-24 (Server) WYSIWYG Editor
+2015-07-24 (Server) Import from DOCX files
+2015-07-24 (Server) Automatic Table of Contents
+2015-07-24 (Templates) Markdown to PDF Generation
+2015-07-24 (Server) Automatic Load Testing? {Locust and Travis?}
